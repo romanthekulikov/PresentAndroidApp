@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Подарок❤️</string>
+    <string name="check_text">Проверить</string>
+    <string name="code_text">Код</string>
+    <string name="hint_text">Это подсказка для Ксю</string>
+    <string name="get_hint_text">Получить подсказку</string>
+    <string name="open_all_present">Все подарки</string>
+
+    <string name="first_hint">Первая подсказка</string>
+    <string name="first_additional_hint">Первая дополнительная подсказка</string>
+
+    <string name="second_hint">Вторая подсказка</string>
+    <string name="second_additional_hint">Вторая дополнительная подсказка</string>
+
+    <string name="third_hint">Третья подсказка</string>
+    <string name="third_additional_hint">Третья дополнительная подсказка</string>
+    <string name="first_present_text">Твой первый подарок ❤️</string>
+    <string name="second_present_text">Твой второй подарок ❤️❤️</string>
+    <string name="third_present_text">Твой третий подарок ❤️❤️❤️</string>
+    <string name="back">Вернуться</string>
+
+    <string name="rules_text">Правила исполнителя:
+В день начала прохождения приложения-квеста исполнитель должен прислать свою геолокацию постановщику в приложении "Телеграм". Исполнитель должен пройти по каждому отмеченному месту на карте приложения. На каждой точке, кроме последней, исполнителю необходимо ввести в приложение найденный код для получения подарка. Исполнителю ЗАПРЕЩАЕТСЯ просить больше одной подсказки у постановщика.</string>
+
+    <string name="first_congratulation">Ты открыла свой первый подарок, поздравляю тебя, душа моя!\nНадеюсь на озоне ты себе прикупишь что-нибудь интересное^^</string>
+    <string name="second_congratulation">Сейчас осень, а это пора болезней(\nПоэтому вот тебе сертификат на аптеку, купи таблЭточки, если болеешь или возьми витоминки, чтобы не болеть :)</string>
+    <string name="third_congratulation">Это конечно мог бы сделать я, но, думаю, пусть тебя мнет профессионал xD</string>
+
+    <string name="open_text">Открыть!</string>
+
+    <string name="go">Начни охоту за подарками!</string>
+    <string name="dialog_temp_message">Тут какой-то текст</string>
+    <string name="dialog_temp_positive_button">Да</string>
+    <string name="dialog_temp_negative_button">Нет</string>
+</resources>
