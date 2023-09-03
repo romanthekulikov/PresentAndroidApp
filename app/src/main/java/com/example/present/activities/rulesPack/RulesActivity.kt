@@ -1,8 +1,7 @@
-package com.example.present.rulesPack
+package com.example.present.activities.rulesPack
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.present.R
 import com.example.present.databinding.ActivityRulesBinding
 
 class RulesActivity : AppCompatActivity() {

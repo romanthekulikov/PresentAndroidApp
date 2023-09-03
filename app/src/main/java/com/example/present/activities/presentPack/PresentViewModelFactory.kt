@@ -1,4 +1,4 @@
-package com.example.present.presentPack
+package com.example.present.activities.presentPack
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -20,6 +20,7 @@ class PresentViewModelFactory(context: Context) : ViewModelProvider.Factory {
         GetPresentListUseCase()
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         return PresentViewModel(getProgressUseCase, getPresentListUseCase) as T

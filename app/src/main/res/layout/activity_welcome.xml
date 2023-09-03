@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/backgroung"
     android:padding="25dp"
-    tools:context=".welcomePack.WelcomeActivity">
+    tools:context=".activities.welcomePack.WelcomeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

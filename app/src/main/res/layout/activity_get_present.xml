@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/backgroung"
     android:padding="30dp"
-    tools:context=".getPresentPack.GetPresentActivity">
+    tools:context=".activities.getPresentPack.GetPresentActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

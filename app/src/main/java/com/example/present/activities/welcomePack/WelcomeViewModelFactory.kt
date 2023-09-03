@@ -1,4 +1,4 @@
-package com.example.present.welcomePack
+package com.example.present.activities.welcomePack
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,6 +9,7 @@ class WelcomeViewModelFactory : ViewModelProvider.Factory {
         GetCountStringUseCase()
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         return WelcomeViewModel(getCountStringUseCase) as T

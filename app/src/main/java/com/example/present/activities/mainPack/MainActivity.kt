@@ -1,4 +1,4 @@
-package com.example.present
+package com.example.present.activities.mainPack
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,10 +11,10 @@ import com.example.present.data.StringProvider
 import com.example.present.databinding.ActivityMainBinding
 import com.example.present.dialog.DialogPresent
 import com.example.present.domain.IntentKeys
-import com.example.present.getPresentPack.GetPresentActivity
-import com.example.present.mapPack.MapActivity
-import com.example.present.presentPack.PresentActivity
-import com.example.present.rulesPack.RulesActivity
+import com.example.present.activities.getPresentPack.GetPresentActivity
+import com.example.present.activities.mapPack.MapActivity
+import com.example.present.activities.presentPack.PresentActivity
+import com.example.present.activities.rulesPack.RulesActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingTop="50dp"
     android:background="@drawable/backgroung"
-    tools:context=".mapPack.MapActivity">
+    tools:context=".activities.mapPack.MapActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroung"
-    tools:context=".presentPack.PresentActivity">
+    tools:context=".activities.presentPack.PresentActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/present_list"

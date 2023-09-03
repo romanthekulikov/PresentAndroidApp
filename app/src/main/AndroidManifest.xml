@@ -18,7 +18,7 @@
         android:theme="@style/Theme.Present"
         tools:targetApi="31">
         <activity
-            android:name=".DistributiveActivity"
+            android:name=".activities.DistributiveActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,22 +27,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".welcomePack.WelcomeActivity"
+            android:name=".activities.welcomePack.WelcomeActivity"
             android:exported="true" />
         <activity
-            android:name=".getPresentPack.GetPresentActivity"
+            android:name=".activities.getPresentPack.GetPresentActivity"
             android:exported="false" />
         <activity
-            android:name=".rulesPack.RulesActivity"
+            android:name=".activities.rulesPack.RulesActivity"
             android:exported="false" />
         <activity
-            android:name=".mapPack.MapActivity"
+            android:name=".activities.mapPack.MapActivity"
             android:exported="false" />
         <activity
-            android:name=".presentPack.PresentActivity"
+            android:name=".activities.presentPack.PresentActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.mainPack.MainActivity"
             android:exported="false" />
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.present
+package com.example.present.activities.mainPack
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -25,6 +25,7 @@ class MainViewModelFactory(context: Context) : ViewModelProvider.Factory {
         GetProgressUseCase(mainInfoRepository = mainInfoRepository)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         return MainViewModel(

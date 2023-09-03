@@ -1,4 +1,4 @@
-package com.example.present.getPresentPack
+package com.example.present.activities.getPresentPack
 
 import android.content.ClipData
 import android.content.ClipboardManager

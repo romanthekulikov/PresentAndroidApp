@@ -1,4 +1,4 @@
-package com.example.present.presentPack
+package com.example.present.activities.presentPack
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.present.databinding.ActivityPresentBinding
 import com.example.present.domain.IntentKeys
-import com.example.present.getPresentPack.GetPresentActivity
+import com.example.present.activities.getPresentPack.GetPresentActivity
+import com.example.present.adapters.PresentListAdapter
 
 class PresentActivity : AppCompatActivity(), PresentListAdapter.PresentAdapterFunc {
     private lateinit var binding: ActivityPresentBinding

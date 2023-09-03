@@ -1,7 +1,6 @@
-package com.example.present.mapPack
+package com.example.present.activities.mapPack
 
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.present.R
 import com.example.present.data.StringProvider

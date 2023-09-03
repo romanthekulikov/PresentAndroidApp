@@ -1,11 +1,11 @@
-package com.example.present.welcomePack
+package com.example.present.activities.welcomePack
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.present.MainActivity
+import com.example.present.activities.mainPack.MainActivity
 import com.example.present.data.Pref
 import com.example.present.databinding.ActivityWelcomeBinding
 

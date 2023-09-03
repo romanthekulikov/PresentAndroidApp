@@ -1,4 +1,4 @@
-package com.example.present.welcomePack
+package com.example.present.activities.welcomePack
 
 import android.os.CountDownTimer
 import androidx.lifecycle.MutableLiveData
@@ -34,6 +34,7 @@ class WelcomeViewModel(
         countDownTimer.start()
     }
 
+    @Suppress("DEPRECATION")
     fun getTime(): Long {
         return Date(123, 7, 30, 6, 21, 0).time - System.currentTimeMillis() - 10800000
     }
