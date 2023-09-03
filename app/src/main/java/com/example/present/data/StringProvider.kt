@@ -49,4 +49,10 @@ object StringProvider {
         3 to "Четвертая дополнительная подсказка"
     )
     // Hint region
+
+    val presentNameList = listOf(
+        "Твой первый подарок ❤️",
+        "Твой второй подарок ❤️",
+        "Твой третий подарок ❤️"
+    )
 }
