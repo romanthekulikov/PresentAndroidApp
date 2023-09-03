@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.present.data.MainInfoRepositoryImpl
+import com.example.present.domain.mainUseCase.GetPresentListUseCase
 import com.example.present.domain.mainUseCase.GetProgressUseCase
 
 class PresentViewModelFactory(context: Context) : ViewModelProvider.Factory {
@@ -15,8 +16,12 @@ class PresentViewModelFactory(context: Context) : ViewModelProvider.Factory {
         GetProgressUseCase(mainInfoRepository = mainInfoRepository)
     }
 
+    private val getPresentListUseCase by lazy(LazyThreadSafetyMode.NONE) {
+        GetPresentListUseCase()
+    }
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
-        return PresentViewModel(getProgressUseCase) as T
+        return PresentViewModel(getProgressUseCase, getPresentListUseCase) as T
     }
 }
