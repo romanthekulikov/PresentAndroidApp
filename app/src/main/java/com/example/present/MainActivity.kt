@@ -3,6 +3,8 @@ package com.example.present
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.present.data.StringProvider
@@ -18,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainVM: MainViewModel
 
+    private var backPressed: Long = System.currentTimeMillis()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         initScreen()
         observationInit()
         listenersInit()
+        addBackDispatcher()
     }
 
     private fun initScreen() {
@@ -119,5 +124,22 @@ class MainActivity : AppCompatActivity() {
     private fun hideKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+    }
+
+    private fun addBackDispatcher() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressed + 2000 > System.currentTimeMillis()) {
+                    finish()
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        StringProvider.ON_BACK_PRESSED_MESSAGE,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                backPressed = System.currentTimeMillis()
+            }
+        })
     }
 }

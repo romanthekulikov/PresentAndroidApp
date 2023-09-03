@@ -1,13 +1,11 @@
 package com.example.present.welcomePack
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.present.MainActivity
-import com.example.present.MainViewModel
-import com.example.present.MainViewModelFactory
 import com.example.present.data.Pref
 import com.example.present.databinding.ActivityWelcomeBinding
 
@@ -27,6 +25,7 @@ class WelcomeActivity : AppCompatActivity() {
             Pref(this).saveFirstOpening(false)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 

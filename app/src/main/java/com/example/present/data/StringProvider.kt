@@ -3,6 +3,8 @@ package com.example.present.data
 object StringProvider {
     const val API = "c375e61a-5a3f-44eb-96b5-53a3c5a7b8b6"
 
+    const val ON_BACK_PRESSED_MESSAGE = "Нажми еще раз для выхода"
+
     // Dialog region
     const val DIALOG_ERROR_MESSAGE = "Не угадала или неправильно ввела)"
 
