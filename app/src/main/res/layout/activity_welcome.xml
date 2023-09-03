@@ -11,15 +11,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="25dp"
-            android:gravity="center"
             android:background="@drawable/border"
+            android:gravity="center"
             android:padding="10dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -31,7 +31,7 @@
                 android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1ч:20мин:40сек"
+                android:text="@string/counter_tool_str"
                 android:textSize="30sp" />
 
         </LinearLayout>
@@ -67,10 +67,13 @@
 
             </LinearLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/go"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/button_style"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:text="@string/go"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"

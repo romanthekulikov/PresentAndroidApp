@@ -32,4 +32,7 @@
     <string name="dialog_temp_message">Тут какой-то текст</string>
     <string name="dialog_temp_positive_button">Да</string>
     <string name="dialog_temp_negative_button">Нет</string>
+    <string name="rules_description">Кнопка просмотра правил</string>
+    <string name="map_description">Кнопка просмотра карты</string>
+    <string name="counter_tool_str">1ч:20мин:40сек</string>
 </resources>
