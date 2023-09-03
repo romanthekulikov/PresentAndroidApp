@@ -13,7 +13,6 @@ import com.example.present.getPresentPack.GetPresentActivity
 import com.example.present.mapPack.MapActivity
 import com.example.present.presentPack.PresentActivity
 import com.example.present.rulesPack.RulesActivity
-import com.yandex.mapkit.MapKitFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -21,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MapKitFactory.setApiKey(StringProvider.API)  //Инициализация API для Яндекс карт
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
