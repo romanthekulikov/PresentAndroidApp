@@ -6,12 +6,12 @@ object StringProvider {
     const val ON_BACK_PRESSED_MESSAGE = "Нажми еще раз для выхода"
 
     // Dialog region
-    const val DIALOG_ERROR_MESSAGE = "Не угадала или неправильно ввела)"
+    const val DIALOG_ERROR_MESSAGE = "Не угадал или неправильно ввел)"
 
     const val POSITIVE_DIALOG_BUTTON = "Сейчас"
     const val NEGATIVE_DIALOG_BUTTON = "Потом"
     const val POSITIVE_ADDITIONAL_BUTTON = "Оки^^"
-    const val DIALOG_UNDERSTAND_BUTTON = "Поняла("
+    const val DIALOG_UNDERSTAND_BUTTON = "Понял("
     const val GO = "Вперед!"
 
     const val DIALOG_CORRECT_TAG = "correct_dialog"
@@ -32,9 +32,9 @@ object StringProvider {
 
     // Hint region
     val dialogCongratulationTitleMap: Map<Int, String> = mapOf(
-        0 to "Поздравляю тебя с первым твоим подарочком, Ксю❤️\nОткроешь сейчас или потом?",
-        1 to "Ого, да ты уже добралась до второго, поздравляю^^❤️\nОткроешь сейчас или потом?",
-        2 to "Ты дошла до последнего подарка в этом приложении, любимка❤️\nОткроешь сейчас или потом?"
+        0 to "Поздравляю тебя с первым твоим подарочком\nОткроешь сейчас или потом?",
+        1 to "Ого, да ты уже добралась до второго, поздравляю^^\nОткроешь сейчас или потом?",
+        2 to "Ты дошла до последнего подарка в этом приложении\nОткроешь сейчас или потом?"
     )
 
     val hintMap = mapOf(
@@ -53,8 +53,8 @@ object StringProvider {
     // Hint region
 
     val presentNameList = listOf(
-        "Твой первый подарок ❤️",
-        "Твой второй подарок ❤️",
-        "Твой третий подарок ❤️"
+        "Твой первый подарок",
+        "Твой второй подарок",
+        "Твой третий подарок"
     )
 }
