@@ -14,8 +14,8 @@ import com.example.present.dialog.DialogPresent
 import com.example.present.domain.IntentKeys
 
 const val OZON_PRESENT = 0
-const val APOTHECARY_PRESENT = 1
-const val MASSAGE_PRESENT = 2
+const val YANDEX_PRESENT = 1
+const val GOLDEN_APPLE_PRESENT = 2
 
 class GetPresentActivity : AppCompatActivity() {
     private lateinit var binding: ActivityGetPresentBinding
@@ -27,42 +27,38 @@ class GetPresentActivity : AppCompatActivity() {
 
         presentId = intent.getIntExtra(IntentKeys.PROGRESS_KEY, OZON_PRESENT)
 
+        val giftImage = when(presentId) {
+            OZON_PRESENT -> R.drawable.ozon
+            YANDEX_PRESENT -> R.drawable.yandex
+            GOLDEN_APPLE_PRESENT -> R.drawable.golden_apple
+            else -> R.drawable.ozon
+        }
+        val key = StringProvider.keyMap[presentId]!!
+
         binding.apply {
-            when (presentId) {
-                OZON_PRESENT -> {
-                    congratulation.text = resources.getText(R.string.first_congratulation)
-                    certificateImage.setImageResource(R.drawable.ozon)
-                    open.setOnClickListener {
-                        writeToClipBoard()
-                        val task = {
-                            val uri = Uri.parse(StringProvider.OZON_REDIRECT_URL)
-                            val intent = Intent(Intent.ACTION_VIEW, uri)
-                            startActivity(intent)
-                        }
-                        getDialog(task).show(supportFragmentManager, StringProvider.DIALOG_GO_TAG)
-                    }
+            congratulation.text = StringProvider.congratulationsWithPresent[presentId]
+            certificateImage.setImageResource(giftImage)
+            open.setOnClickListener {
+                writeKeyToClipBoard(key)
+                val task = {
+                    val uri = Uri.parse(StringProvider.redirectUrls[presentId])
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
                 }
-
-                APOTHECARY_PRESENT -> {
-                    congratulation.text = resources.getText(R.string.second_congratulation)
-                }
-
-                MASSAGE_PRESENT -> {
-                    congratulation.text = resources.getText(R.string.third_congratulation)
-                }
+                getDialog(task).show(supportFragmentManager, StringProvider.DIALOG_GO_TAG)
             }
+        }
 
-            binding.back.setOnClickListener {
-                finish()
-            }
+        binding.back.setOnClickListener {
+            finish()
         }
 
     }
 
-    private fun writeToClipBoard() {
+    private fun writeKeyToClipBoard(key: String) {
         val clipboard: ClipboardManager =
             applicationContext.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("", StringProvider.OZON_CERTIFICATE_KEY)
+        val clip = ClipData.newPlainText("", key)
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, StringProvider.COPY_FINISHED, Toast.LENGTH_SHORT).show()
     }
