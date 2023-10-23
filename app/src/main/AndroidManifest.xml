@@ -20,6 +20,7 @@
         <activity
             android:name=".activities.DistributiveActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +44,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.mainPack.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

@@ -18,9 +18,9 @@ class MapActivity : AppCompatActivity() {
     private var progress = 0
 
     private val listPoint = listOf(
-        Point(56.6512, 47.84233),
-        Point(56.64003, 47.86532),
-        Point(56.64613, 47.86323),
+        Point(56.64003, 47.86532),//лунопарк
+        Point(56.64613, 47.86323),//вейп-шоп
+        Point(56.635262, 47.882197),//сквер пушкина
         Point(56.63695, 47.8869)
     )
 

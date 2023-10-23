@@ -18,7 +18,7 @@ class WelcomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         welcomeVM = ViewModelProvider(this, WelcomeViewModelFactory())[WelcomeViewModel::class.java]
-        //welcomeVM.initCount()
+        welcomeVM.initCount()
         observationInit()
 
         binding.go.setOnClickListener {
@@ -33,7 +33,7 @@ class WelcomeActivity : AppCompatActivity() {
         welcomeVM.mutableFinishCount.observe(this) {
             if (it) {
                 binding.content.visibility = View.VISIBLE
-                binding.count.visibility = View.GONE
+                binding.countLayout.visibility = View.GONE
             }
         }
 
