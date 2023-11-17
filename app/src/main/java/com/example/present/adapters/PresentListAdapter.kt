@@ -3,7 +3,7 @@ package com.example.present.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.present.data.PresentModel
+import com.example.present.data.models.PresentModel
 import com.example.present.databinding.ItemPresentBinding
 
 class PresentListAdapter(

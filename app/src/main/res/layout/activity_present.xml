@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroung"
-    tools:context=".activities.presentPack.PresentActivity">
+    tools:context=".activities.gamePack.presentPack.PresentActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/present_list"
@@ -27,6 +27,7 @@
         android:paddingStart="15dp"
         android:paddingEnd="15dp"
         android:text="@string/back"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

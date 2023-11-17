@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/backgroung"
     android:padding="25dp"
-    tools:context=".activities.rulesPack.RulesActivity">
+    tools:context=".activities.gamePack.rulesPack.RulesActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rules_text"
+                android:textColor="@color/black"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -42,6 +43,7 @@
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             android:text="@string/back"
+            android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

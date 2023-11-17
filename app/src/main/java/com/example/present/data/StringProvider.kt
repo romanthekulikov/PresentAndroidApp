@@ -13,6 +13,10 @@ object StringProvider {
     const val POSITIVE_ADDITIONAL_BUTTON = "Оки^^"
     const val DIALOG_UNDERSTAND_BUTTON = "Понял("
     const val GO = "Вперед!"
+    const val CONTINUE = "Продолжить"
+    const val EXIT = "Выйти"
+    const val DONE = "Готово"
+    const val NEXT = "Далее"
 
     const val DIALOG_CORRECT_TAG = "correct_dialog"
     const val DIALOG_ADDITIONAL_TAG = "additional_dialog"
@@ -57,4 +61,12 @@ object StringProvider {
         "Твой второй подарок",
         "Твой третий подарок"
     )
+
+    const val AGREE = "Понятно"
+    const val FORM_MESSAGE = "Приветствую в создателе квеста. Здесь вы можете создать свою игру. " +
+            "Нажмите на + чтобы добавить подарок. Когда вы введете все подарки, " +
+            "то их можно отправить, нажав на соответствующую кнопку"
+
+    const val EXIT_FORM_REDACTOR = "Вы действительно хотите прекратить создание подарка? Прогресс не сохранится"
+    const val POINT_FORM_ERROR = "Не все поля заполнены"
 }

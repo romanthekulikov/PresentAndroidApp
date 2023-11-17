@@ -1,6 +1,6 @@
 package com.example.present.domain.mainUseCase
 
-import com.example.present.data.PresentModel
+import com.example.present.data.models.PresentModel
 import com.example.present.data.StringProvider
 
 class GetPresentListUseCase {

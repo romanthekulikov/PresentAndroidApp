@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="300dp"
-    android:layout_height="200dp"
-    android:layout_gravity="center">
-
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/backgroung"
-        app:riv_corner_radius="15dp" />
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/backgroung">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:background="@drawable/border_dialog">
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/message"
@@ -24,8 +22,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp"
-            android:textColor="@color/black"
             android:text="@string/dialog_temp_message"
+            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/positive_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,6 +39,7 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text="@string/dialog_temp_positive_button"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/negative_button"
             app:layout_constraintStart_toStartOf="parent" />
@@ -55,9 +54,10 @@
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text="@string/dialog_temp_negative_button"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

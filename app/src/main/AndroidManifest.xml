@@ -18,6 +18,15 @@
         android:theme="@style/Theme.Present"
         tools:targetApi="31">
         <activity
+            android:name=".activities.startPack.formPack.AddPresentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.startPack.formPack.FormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.startPack.appModePack.AppModeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.DistributiveActivity"
             android:exported="true">
             <intent-filter>
@@ -27,22 +36,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.welcomePack.WelcomeActivity"
+            android:name=".activities.startPack.welcomePack.WelcomeActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.getPresentPack.GetPresentActivity"
+            android:name=".activities.gamePack.getPresentPack.GetPresentActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.rulesPack.RulesActivity"
+            android:name=".activities.gamePack.rulesPack.RulesActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.mapPack.MapActivity"
+            android:name=".activities.gamePack.mapPack.MapActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.presentPack.PresentActivity"
+            android:name=".activities.gamePack.presentPack.PresentActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.mainPack.MainActivity"
+            android:name=".activities.gamePack.mainPack.MainActivity"
             android:exported="false" />
     </application>
 

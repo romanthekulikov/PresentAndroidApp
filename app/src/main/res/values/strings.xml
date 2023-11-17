@@ -35,4 +35,25 @@
     <string name="rules_description">Кнопка просмотра правил</string>
     <string name="map_description">Кнопка просмотра карты</string>
     <string name="counter_tool_str">1ч:20мин:40сек</string>
+
+    <string name="tutorial_first">Создавай квест!</string>
+    <string name="tutorial_second">Собирай подарки!</string>
+    <string name="tutorial_third">Удиви своих друзей!</string>
+    <string name="tutorial_go">Начать</string>
+
+    <string name="mode_make">Создать квест</string>
+    <string name="mode_sign_in">Войти в игру</string>
+
+    <string name="form_send">Отправить</string>
+    <string name="form_next">Далее</string>
+    <string name="form_lat">Долгота</string>
+    <string name="form_lng">Широта</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="form_congratulation">Поздравительный текст</string>
+    <string name="form_link">Ссылка на активацию подарка</string>
+    <string name="form_key">Код</string>
+    <string name="form_qr">Сгенерировать QR код</string>
+    <string name="point_form_text">Текст для места</string>
+    <string name="point_form_hint">Подсказка для игрока</string>
 </resources>
