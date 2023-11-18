@@ -8,117 +8,105 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.present.activities.gamePack.mapPack.Point
+import com.example.present.data.StringProvider
 import com.example.present.data.models.PointFormModel
-import com.example.present.databinding.FragmentPointFormBinding
+import com.example.present.databinding.FrPointFormBinding
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.map.CameraPosition
 
-class PointFormFragment : Fragment() {
-    companion object {
-        @JvmStatic
-        fun newInstance() = PointFormFragment()
-        var pointForm = PointFormModel(Point(0.0, 0.0), "", "")
-    }
+class PointFormFragment(
+    private val onClick: PointOnNextClick,
+    private val pointForm: PointFormModel?
+) : Fragment() {
 
-    private lateinit var _binding: FragmentPointFormBinding
+    private lateinit var _binding: FrPointFormBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPointFormBinding.inflate(layoutInflater)
+        _binding = FrPointFormBinding.inflate(layoutInflater)
         _binding.mapView.map.isScrollGesturesEnabled = false
-        if (pointForm.point.latitude != 0.0 && pointForm.point.longitude != 0.0) {
-            _binding.lat.setText(pointForm.point.latitude.toString())
-            _binding.lng.setText(pointForm.point.longitude.toString())
-            moveMap()
-        }
+        fillField()
         listenersInit()
-
         return _binding.root
     }
 
+    private fun fillField() {
+        if (pointForm != null) {
+            _binding.apply {
+                lat.setText(pointForm.point.latitude.toString())
+                lng.setText(pointForm.point.longitude.toString())
+                text.setText(pointForm.text)
+                hint.setText(pointForm.hint)
+            }
+            moveMap()
+        }
+    }
+
     private fun listenersInit() {
-        _binding.lat.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                try {
-                    pointForm.point.latitude = _binding.lat.text.toString().toDouble()
-                } catch (_: NumberFormatException) {}
-                moveMap()
-            }
-
-        })
-
-        _binding.lng.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                moveMap()
-                try {
-                    pointForm.point.longitude = _binding.lng.text.toString().toDouble()
-                } catch (_: NumberFormatException) {}
-            }
-
-        })
-
-        _binding.text.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                moveMap()
-                pointForm.text = _binding.text.toString()
-            }
-
-        })
-
-        _binding.text.addTextChangedListener(object : TextWatcher {
+        _binding.next.setOnClickListener {
+            sendPointToActivity()
+        }
+        val textWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
-                pointForm.text = _binding.text.toString()
+                moveMap()
             }
-        })
+        }
+        _binding.lat.addTextChangedListener(textWatcher)
+        _binding.lng.addTextChangedListener(textWatcher)
+    }
 
-        _binding.hint.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+    private fun sendPointToActivity() {
+        val pointForm: PointFormModel?
+        val lat = _binding.lat.text
+        val lng = _binding.lng.text
+        val text = _binding.text.text.toString()
+        val hint = _binding.hint.text.toString()
+        var pointHasError = false
+        if (lat.isNullOrEmpty()) {
+            pointHasError = true
+            _binding.lat.error = StringProvider.ERROR_LONGITUDE_POINT
+        }
+        if (lng.isNullOrEmpty()) {
+            pointHasError = true
+            _binding.lng.error = StringProvider.ERROR_LATITUDE_POINT
+        }
+        if (text.isEmpty()) {
+            pointHasError = true
+            _binding.text.error = StringProvider.ERROR_TEXT_POINT
+        }
+        if (hint.isEmpty()) {
+            pointHasError = true
+            _binding.hint.error = StringProvider.ERROR_HINT_POINT
+        }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (!pointHasError) {
 
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-                pointForm.hint = _binding.hint.toString()
-            }
-        })
+            pointForm = PointFormModel(
+                point = Point(lat.toString().toDouble(), lng.toString().toDouble()),
+                text = text, hint = hint
+            )
+            onClick.onNextClickPoint(pointForm)
+        }
     }
 
     private fun moveMap() {
-        _binding.mapView.map.move(
-            CameraPosition(
-                com.yandex.mapkit.geometry.Point(
-                    pointForm.point.latitude,
-                    pointForm.point.longitude
-                ), 14F, 0F, 0F
+        try {
+            _binding.mapView.map.move(
+                CameraPosition(
+                    com.yandex.mapkit.geometry.Point(
+                        _binding.lat.text.toString().toDouble(),
+                        _binding.lng.text.toString().toDouble()
+                    ), 14F, 0F, 0F
+                )
             )
-        )
+        } catch (_: NumberFormatException) {}
+
     }
 
     override fun onStart() {
@@ -133,5 +121,8 @@ class PointFormFragment : Fragment() {
         super.onStop()
     }
 
-
+    interface PointOnNextClick {
+        fun onNextClickPoint(pointForm: PointFormModel)
+    }
 }
+

@@ -49,15 +49,12 @@
             android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image">
-
-        </com.google.android.material.textfield.TextInputEditText>
+            app:layout_constraintTop_toBottomOf="@+id/image" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/link"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="30dp"
             android:backgroundTint="@color/black"
             android:hint="@string/form_link"
             android:textColor="@color/black"
@@ -70,19 +67,71 @@
             android:id="@+id/key"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="30dp"
             android:backgroundTint="@color/black"
             android:hint="@string/form_key"
             android:textColor="@color/black"
             android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/link">
+            app:layout_constraintTop_toBottomOf="@+id/link" />
 
-        </com.google.android.material.textfield.TextInputEditText>
+        <LinearLayout
+            android:id="@+id/key_open_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/key">
+
+            <LinearLayout
+                android:id="@+id/download_qr_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/download_qr"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/circle"
+                    android:elevation="15dp"
+                    android:gravity="center"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/rules_description"
+                        android:src="@drawable/download" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/key_open"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:hint="@string/form_key_open"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/qr_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/key_open_layout" />
+
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/next"
+            android:id="@+id/qr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -94,7 +143,23 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/key" />
+            app:layout_constraintTop_toBottomOf="@+id/qr_image" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/complete"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/button_style"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/present_form_complete"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qr" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

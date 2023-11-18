@@ -52,8 +52,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="form_congratulation">Поздравительный текст</string>
     <string name="form_link">Ссылка на активацию подарка</string>
-    <string name="form_key">Код</string>
+    <string name="form_key">Код активации</string>
+    <string name="form_key_open">Код открытия</string>
     <string name="form_qr">Сгенерировать QR код</string>
     <string name="point_form_text">Текст для места</string>
     <string name="point_form_hint">Подсказка для игрока</string>
+    <string name="present_form_complete">Готово</string>
 </resources>

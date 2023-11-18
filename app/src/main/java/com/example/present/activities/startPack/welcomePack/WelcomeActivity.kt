@@ -3,6 +3,7 @@ package com.example.present.activities.startPack.welcomePack
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -19,7 +20,6 @@ class WelcomeActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         pagerInit()
         listenersInit()
         addBackPressed()

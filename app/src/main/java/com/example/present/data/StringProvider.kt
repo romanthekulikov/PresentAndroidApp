@@ -2,6 +2,10 @@ package com.example.present.data
 
 object StringProvider {
     const val API = "c375e61a-5a3f-44eb-96b5-53a3c5a7b8b6"
+    const val APP_DEEPLINK_BASE = "present://distributive"
+    const val APP_DEEPLINK_MAIN = "/main"
+    const val ADD_CODE = "&open_code="
+    const val QR_TOAST = "QR код был сохранен в Download"
 
     const val ON_BACK_PRESSED_MESSAGE = "Нажми еще раз для выхода"
 
@@ -17,6 +21,10 @@ object StringProvider {
     const val EXIT = "Выйти"
     const val DONE = "Готово"
     const val NEXT = "Далее"
+    const val YES = "Да"
+    const val NO = "Нет"
+
+    const val ERROR_SAVE_INFO_ITEM = "Не удалось сохранить данные, проверьте их кореектность"
 
     const val DIALOG_CORRECT_TAG = "correct_dialog"
     const val DIALOG_ADDITIONAL_TAG = "additional_dialog"
@@ -68,5 +76,14 @@ object StringProvider {
             "то их можно отправить, нажав на соответствующую кнопку"
 
     const val EXIT_FORM_REDACTOR = "Вы действительно хотите прекратить создание подарка? Прогресс не сохранится"
+    const val COMPLETE_FORM_REDACTOR = "Сохранить подарок?"
     const val POINT_FORM_ERROR = "Не все поля заполнены"
+
+    const val ERROR_LATITUDE_POINT = "Необходимо заполнить долготу"
+    const val ERROR_LONGITUDE_POINT = "Необходимо заполнить широту"
+    const val ERROR_TEXT_POINT = "Необходимо заполнить текст"
+    const val ERROR_HINT_POINT = "Необходимо заполнить подсказку"
+    const val ERROR_CONGRATULATION_PRESENT = "Необходимо заполнить поздравление"
+    const val ERROR_LINK_PRESENT = "Необходимо заполнить ссылку на активацию"
+    const val ERROR_KEY_PRESENT = "Необходимо заполнить ключ для активации подарка"
 }

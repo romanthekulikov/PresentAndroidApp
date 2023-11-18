@@ -3,6 +3,7 @@ package com.example.present.activities
 import android.content.Intent
 import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.present.R
 import com.example.present.activities.startPack.appModePack.AppModeActivity
@@ -22,9 +23,6 @@ class DistributiveActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         MapKitFactory.setApiKey(StringProvider.API)  //Инициализация API для Яндекс карт
         setContentView(R.layout.activity_distributive)
-
-
-
 
         val beFirstOpen = Pref(context = applicationContext).getFirstOpening()
 
