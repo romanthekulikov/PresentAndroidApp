@@ -1,11 +1,14 @@
 package com.example.present.activities.startPack.formPack
 
+import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import com.example.present.activities.startPack.formPack.formStages.PointFormFragment
 import com.example.present.activities.startPack.formPack.formStages.PresentFormFragment
+import com.example.present.data.Pref
 import com.example.present.data.StringProvider
 import com.example.present.data.database.AppDatabase
 import com.example.present.data.database.entities.FormItemEntity
@@ -30,33 +33,49 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddPresentBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
+        addBackPressed()
+        listenersInit()
+        moveToFirstStage()
+    }
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(binding.fragmentContainer.id, PointFormFragment(this, pointForm))
-            .setTransition(TRANSIT_FRAGMENT_OPEN)
-            .commit()
-
+    private fun listenersInit() {
         binding.back.setOnClickListener {
             if (currentStage == POINT_STAGE) {
                 getDialog().show(supportFragmentManager, StringProvider.DIALOG_ERROR_TAG)
             } else {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(
-                        binding.fragmentContainer.id,
-                        PointFormFragment(onClick = this, pointForm = pointForm)
-                    )
-                    .setTransition(TRANSIT_FRAGMENT_OPEN)
-                    .commit()
-                currentStage = POINT_STAGE
+                moveToFirstStage()
             }
         }
 
         binding.exit.setOnClickListener {
             getDialog().show(supportFragmentManager, StringProvider.DIALOG_ERROR_TAG)
         }
+    }
+
+    private fun moveToFirstStage() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                binding.fragmentContainer.id,
+                PointFormFragment(onClick = this, pointForm = pointForm)
+            )
+            .setTransition(TRANSIT_FRAGMENT_OPEN)
+            .commit()
+        currentStage = POINT_STAGE
+    }
+
+    private fun moveToSecondStage() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                binding.fragmentContainer.id,
+                PresentFormFragment(onClick = this, presentForm = presentForm)
+            )
+            .setTransition(TRANSIT_FRAGMENT_OPEN)
+            .commit()
+        currentStage = PRESENT_STAGE
     }
 
     private fun getDialog(): DialogPresent {
@@ -74,15 +93,7 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
 
     override fun onNextClickPoint(pointForm: PointFormModel) {
         this.pointForm = pointForm
-        supportFragmentManager
-            .beginTransaction()
-            .replace(
-                binding.fragmentContainer.id,
-                PresentFormFragment(onClick = this, presentForm = presentForm)
-            )
-            .setTransition(TRANSIT_FRAGMENT_OPEN)
-            .commit()
-        currentStage = PRESENT_STAGE
+        moveToSecondStage()
     }
 
     override fun onCompleteClickPresent(presentForm: PresentFormModel) {
@@ -108,6 +119,8 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
                     getErrorDialog().show(supportFragmentManager, StringProvider.DIALOG_ERROR_TAG)
                 }
             }
+            val intent = Intent(this, FormActivity::class.java)
+            startActivity(intent)
             finish()
         }
 
@@ -124,23 +137,39 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
     }
 
     private fun saveFormItem() {
-        val tt = presentForm!!.image.toString()
         val db = AppDatabase.getDB(context = this)
-        val idUser = db.getUserDao().getUser().id
-        val formItem = FormItemEntity(
-            idStage = 0,
-            idUser = idUser,
-            textStage = pointForm!!.text,
-            hintText = pointForm!!.hint,
-            longitude = pointForm!!.point.longitude,
-            latitude = pointForm!!.point.latitude,
-            congratulation = presentForm!!.congratulationText,
-            presentImg = presentForm!!.image.toString(),
-            key = presentForm!!.key,
-            keyOpen = presentForm!!.keyOpen,
-            link = presentForm!!.link
-        )
+        val idUser = db.getUserDao().getUser()?.id
+        val formItem = idUser?.let {
+            FormItemEntity(
+                idStage = 0,
+                idUser = it,
+                textStage = pointForm!!.text,
+                hintText = pointForm!!.hint,
+                longitude = pointForm!!.point.longitude,
+                latitude = pointForm!!.point.latitude,
+                congratulation = presentForm!!.congratulationText,
+                presentImg = presentForm!!.image.toString(),
+                key = presentForm!!.key,
+                keyOpen = presentForm!!.keyOpen,
+                link = presentForm!!.link
+            )
+        }
 
-        db.getFormItemDao().saveFormItem(formItem = formItem)
+        if (formItem != null) {
+            db.getFormItemDao().saveFormItem(formItem = formItem)
+        }
+    }
+
+    private fun addBackPressed() {
+        val backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (currentStage == POINT_STAGE) {
+                    getDialog().show(supportFragmentManager, StringProvider.DIALOG_GO_TAG)
+                } else {
+                    moveToFirstStage()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(backPressedCallback)
     }
 }

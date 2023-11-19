@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "form_item_table")
 data class FormItemEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id_stage") val idStage: Int,
+    @ColumnInfo(name = "id_stage") var idStage: Int,
     @ColumnInfo(name = "id_user") val idUser: Int,
     @ColumnInfo(name = "text_stage") val textStage: String,
     @ColumnInfo(name = "hint_text") val hintText: String,

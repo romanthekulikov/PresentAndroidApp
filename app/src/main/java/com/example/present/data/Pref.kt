@@ -4,6 +4,7 @@ import android.content.Context
 
 const val NAME_PREF = "MainPreferences"
 const val TAG_PROGRESS = "count"
+const val TAG_SAW_ADD_PRESENT_TUTORIAL_DIALOG = "present_tutorial_dialog"
 const val TAG_BE_FIRST = "be_first"
 
 class Pref(context: Context) {
@@ -27,5 +28,15 @@ class Pref(context: Context) {
 
     fun getFirstOpening(): Boolean {
         return preferences.getBoolean(TAG_BE_FIRST, true)
+    }
+
+    fun getSawPresentTutorial(): Boolean {
+        return preferences.getBoolean(TAG_SAW_ADD_PRESENT_TUTORIAL_DIALOG, true)
+    }
+
+    fun saveSawPresentTutorial(saw: Boolean) {
+        val editor = preferences.edit()
+        editor.putBoolean(TAG_SAW_ADD_PRESENT_TUTORIAL_DIALOG, saw)
+        editor.apply()
     }
 }

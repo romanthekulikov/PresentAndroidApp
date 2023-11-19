@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.present.R
 import com.example.present.activities.startPack.appModePack.AppModeActivity
+import com.example.present.activities.startPack.authorizationPack.AuthorizationActivity
 import com.example.present.activities.startPack.welcomePack.WelcomeActivity
 import com.example.present.data.Pref
 import com.example.present.data.StringProvider
@@ -25,23 +26,16 @@ class DistributiveActivity : AppCompatActivity() {
         setContentView(R.layout.activity_distributive)
 
         val beFirstOpen = Pref(context = applicationContext).getFirstOpening()
-
-        if (beFirstOpen) {
-            //TODO: Убрать заглушку
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val db = AppDatabase.getDB(applicationContext)
-                    val user = UserEntity(0, "Роман", "", "gadamob@gmail.com")
-                    db.getUserDao().saveUser(user)
-                } catch (_: SQLiteConstraintException) {
-
-                }
-
+        CoroutineScope(Dispatchers.IO).launch {
+            val db = AppDatabase.getDB(applicationContext)
+            val user = db.getUserDao().getUser()
+            val intent: Intent = if (beFirstOpen) {
+                Intent(applicationContext, WelcomeActivity::class.java)
+            } else if (user != null) {
+                Intent(applicationContext, AppModeActivity::class.java)
+            } else {
+                Intent(applicationContext, AuthorizationActivity::class.java)
             }
-            val intent = Intent(this, WelcomeActivity::class.java)
-            startActivity(intent)
-        } else {
-            val intent = Intent(this, AppModeActivity::class.java)
             startActivity(intent)
         }
 

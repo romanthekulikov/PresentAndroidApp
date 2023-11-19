@@ -11,5 +11,5 @@ interface UserDao {
     fun saveUser(user: UserEntity)
 
     @Query("SELECT * FROM user_table")
-    fun getUser(): UserEntity
+    fun getUser(): UserEntity?
 }

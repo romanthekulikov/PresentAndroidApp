@@ -1,13 +1,21 @@
 package com.example.present.activities.startPack.welcomePack
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.present.activities.startPack.appModePack.AppModeActivity
+import com.example.present.activities.startPack.authorizationPack.AuthorizationActivity
 import com.example.present.adapters.TutorialAdapter
 import com.example.present.data.Pref
 import com.example.present.databinding.ActivityWelcomeBinding
@@ -16,19 +24,51 @@ import kotlin.math.abs
 class WelcomeActivity : FragmentActivity() {
     private lateinit var binding: ActivityWelcomeBinding
     private lateinit var viewPager: ViewPager2
+    private lateinit var pLauncher: ActivityResultLauncher<String>
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        registerPermissionListener()
+        checkGalleryPermission()
         pagerInit()
         listenersInit()
         addBackPressed()
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun checkGalleryPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_MEDIA_IMAGES
+            ) == PackageManager.PERMISSION_GRANTED -> {
+
+            }
+
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) -> {
+                Toast.makeText(this, "Необходим доступ к галерее", Toast.LENGTH_LONG).show()
+            }
+            else -> {
+                pLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+            }
+        }
+    }
+
+    private fun registerPermissionListener() {
+        pLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()) {
+            if (!it) {
+                Toast.makeText(this, "Разрешение отклонено", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun listenersInit() {
         binding.go.setOnClickListener {
             Pref(context = applicationContext).saveFirstOpening(false)
-            val intent = Intent(this@WelcomeActivity, AppModeActivity::class.java)
+            val intent = Intent(this@WelcomeActivity, AuthorizationActivity::class.java)
             startActivity(intent)
             finish()
         }

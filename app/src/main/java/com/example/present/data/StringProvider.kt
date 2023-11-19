@@ -4,6 +4,7 @@ object StringProvider {
     const val API = "c375e61a-5a3f-44eb-96b5-53a3c5a7b8b6"
     const val APP_DEEPLINK_BASE = "present://distributive"
     const val APP_DEEPLINK_MAIN = "/main"
+    const val APP_DEEPLINK_GAME_AUTHORIZATION = "/game_authorization"
     const val ADD_CODE = "&open_code="
     const val QR_TOAST = "QR код был сохранен в Download"
 
@@ -15,7 +16,7 @@ object StringProvider {
     const val POSITIVE_DIALOG_BUTTON = "Сейчас"
     const val NEGATIVE_DIALOG_BUTTON = "Потом"
     const val POSITIVE_ADDITIONAL_BUTTON = "Оки^^"
-    const val DIALOG_UNDERSTAND_BUTTON = "Понял("
+    const val DIALOG_UNDERSTAND_BUTTON = "Понятно"
     const val GO = "Вперед!"
     const val CONTINUE = "Продолжить"
     const val EXIT = "Выйти"
@@ -76,8 +77,13 @@ object StringProvider {
             "то их можно отправить, нажав на соответствующую кнопку"
 
     const val EXIT_FORM_REDACTOR = "Вы действительно хотите прекратить создание подарка? Прогресс не сохранится"
+    const val EXIT_GET_KEY = "Вы сохранили код? Вы не сможете его больше нигде найти"
     const val COMPLETE_FORM_REDACTOR = "Сохранить подарок?"
     const val POINT_FORM_ERROR = "Не все поля заполнены"
+
+    const val SEND_FORM_WARNING = "Создать игру с таким набором?"
+
+    const val ERROR_SEND_EMPTY_PRESENT = "Вы не можете отправить пустую игру"
 
     const val ERROR_LATITUDE_POINT = "Необходимо заполнить долготу"
     const val ERROR_LONGITUDE_POINT = "Необходимо заполнить широту"
@@ -86,4 +92,8 @@ object StringProvider {
     const val ERROR_CONGRATULATION_PRESENT = "Необходимо заполнить поздравление"
     const val ERROR_LINK_PRESENT = "Необходимо заполнить ссылку на активацию"
     const val ERROR_KEY_PRESENT = "Необходимо заполнить ключ для активации подарка"
+    const val ERROR_SEND_MESSAGE = "Не удалось отправить"
+
+    const val INVALID_EMAIL = "Некорректный email"
+    const val INVALID_PASSWORD = "Неправильный пароль"
 }

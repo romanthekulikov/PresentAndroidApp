@@ -58,4 +58,10 @@
     <string name="point_form_text">Текст для места</string>
     <string name="point_form_hint">Подсказка для игрока</string>
     <string name="present_form_complete">Готово</string>
+    <string name="email_hint">Ваш @email</string>
+    <string name="password_hint">Ваш пароль</string>
+    <string name="check_password_hint">Цифры из письма</string>
+    <string name="google_auth">Войти с Google</string>
+    <string name="vk_auth">Войти с VK</string>
+    <string name="our_autch">Авторизоваться</string>
 </resources>
