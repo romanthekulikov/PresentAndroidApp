@@ -96,4 +96,7 @@ object StringProvider {
 
     const val INVALID_EMAIL = "Некорректный email"
     const val INVALID_PASSWORD = "Неправильный пароль"
+
+    const val TASK_OPEN_AUTH_GAME = "game_authorization"
+    const val TASK_OPEN_PRESENT = "open_present"
 }

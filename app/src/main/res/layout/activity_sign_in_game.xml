@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background3"
+    android:paddingTop="50dp"
+    tools:context=".activities.startPack.gameSignInPack.SignInGameActivity">
+
+    <LinearLayout
+        android:id="@+id/back_layout"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:alpha="0"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/back"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle"
+            android:elevation="15dp"
+            android:gravity="center"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/rules_description"
+                android:src="@drawable/back" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_layout">
+
+        <LinearLayout
+            android:id="@+id/sign_in"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@drawable/circle"
+                android:elevation="15dp"
+                android:gravity="center"
+                tools:ignore="UselessParent">
+
+                <ImageView
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:contentDescription="@string/rules_description"
+                    android:src="@drawable/login" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="70dp"
+            android:backgroundTint="@color/white"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLength="7"
+            android:hint="@string/login_game_password_hint"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/trans_white"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sign_in" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="300dp"
+        android:layout_height="70dp"
+        android:progress="5"
+        android:splitTrack="false"
+        android:progressDrawable="@drawable/seekbar_signin"
+        android:thumb="@drawable/thumb_signin"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:alpha="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

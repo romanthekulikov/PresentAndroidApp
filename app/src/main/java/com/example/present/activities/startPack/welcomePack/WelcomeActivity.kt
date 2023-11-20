@@ -19,17 +19,26 @@ import com.example.present.activities.startPack.authorizationPack.AuthorizationA
 import com.example.present.adapters.TutorialAdapter
 import com.example.present.data.Pref
 import com.example.present.databinding.ActivityWelcomeBinding
+import com.example.present.domain.IntentKeys
 import kotlin.math.abs
 
 class WelcomeActivity : FragmentActivity() {
     private lateinit var binding: ActivityWelcomeBinding
     private lateinit var viewPager: ViewPager2
     private lateinit var pLauncher: ActivityResultLauncher<String>
+    private var taskActivity = ""
+    private var taskArg = ""
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val data = intent.extras
+        if (data != null) {
+            taskActivity = data.getString(IntentKeys.TASK_ACTIVITY, "")
+            taskArg = data.getString(IntentKeys.TASK_ARG, "")
+        }
+
         registerPermissionListener()
         checkGalleryPermission()
         pagerInit()
@@ -69,6 +78,8 @@ class WelcomeActivity : FragmentActivity() {
         binding.go.setOnClickListener {
             Pref(context = applicationContext).saveFirstOpening(false)
             val intent = Intent(this@WelcomeActivity, AuthorizationActivity::class.java)
+            intent.putExtra(IntentKeys.TASK_ACTIVITY, taskActivity)
+            intent.putExtra(IntentKeys.TASK_ARG, taskArg)
             startActivity(intent)
             finish()
         }

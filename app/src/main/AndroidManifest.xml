@@ -26,6 +26,9 @@
         android:theme="@style/Theme.Present"
         tools:targetApi="31">
         <activity
+            android:name=".activities.startPack.gameSignInPack.SignInGameActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.startPack.authorizationPack.AuthorizationActivity"
             android:exported="false" />
 
