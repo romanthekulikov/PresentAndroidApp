@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -33,7 +34,6 @@ class PresentFormFragment(
         var qr: Bitmap? = null
     }
 
-
     private lateinit var _binding: FrPresentFormBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +52,8 @@ class PresentFormFragment(
             _binding.apply {
                 try {
                     galleryImage.setImageURI(presentForm.image)
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
                 congratulation.setText(presentForm.congratulationText)
                 link.setText(presentForm.link)
                 key.setText(presentForm.key)
@@ -83,7 +84,7 @@ class PresentFormFragment(
 
         _binding.downloadQr.setOnClickListener {
             try {
-                bitmap?.let { it1 -> saveQR( it1) }
+                bitmap?.let { it1 -> saveQR(it1) }
                 Toast.makeText(requireContext(), StringProvider.QR_TOAST, Toast.LENGTH_LONG).show()
             } catch (_: Exception) {
             }
@@ -101,7 +102,8 @@ class PresentFormFragment(
                         _binding.downloadQr.visibility = View.GONE
                         bitmap = null
                     }
-                } catch (_: Exception) {}
+                } catch (_: Exception) {
+                }
 
             }
 
@@ -182,8 +184,17 @@ class PresentFormFragment(
                 val data = it.data
                 val imgUri = data?.data
                 if (imgUri != null) {
-                    _binding.galleryImage.setImageURI(imgUri)
-                    this.presentForm?.image = imgUri
+                    val source = context?.let { it1 ->
+                        ImageDecoder.createSource(
+                            it1.contentResolver,
+                            imgUri
+                        )
+                    }
+                    var bitmap = source?.let { it1 -> ImageDecoder.decodeBitmap(it1) }
+                    bitmap =
+                        bitmap?.let { it1 -> Bitmap.createScaledBitmap(it1, 1200, 600, true) }
+
+                    _binding.galleryImage.setImageBitmap(bitmap)
                     imageCompanion = imgUri
                 }
             }

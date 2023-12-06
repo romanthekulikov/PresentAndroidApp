@@ -45,6 +45,7 @@ class FormActivity : AppCompatActivity() {
         binding.add.setOnClickListener {
             val intent = Intent(this@FormActivity, AddPresentActivity::class.java)
             startActivity(intent)
+            finish()
         }
 
         binding.back.setOnClickListener {

@@ -93,6 +93,7 @@ object StringProvider {
     const val ERROR_LINK_PRESENT = "Необходимо заполнить ссылку на активацию"
     const val ERROR_KEY_PRESENT = "Необходимо заполнить ключ для активации подарка"
     const val ERROR_SEND_MESSAGE = "Не удалось отправить"
+    const val ERROR_LARGE_FILE = "Выбран слишком большой файл"
 
     const val INVALID_EMAIL = "Некорректный email"
     const val INVALID_PASSWORD = "Неправильный пароль"

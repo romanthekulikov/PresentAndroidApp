@@ -103,7 +103,7 @@ class SignInGameActivity : AppCompatActivity() {
                                 56.64003,
                                 false
                             )
-                            //try {
+                            try {
                                 val db = AppDatabase.getDB(applicationContext)
                                 db.getGameDao().saveGame(game)
                                 db.getPresentDao().savePresent(present1)
@@ -116,15 +116,15 @@ class SignInGameActivity : AppCompatActivity() {
                                     startActivity(intent)
                                     finish()
                                 }
-//                            } catch (e: Exception) {
-//                                CoroutineScope(Dispatchers.Main).launch {
-//                                    Toast.makeText(
-//                                        applicationContext,
-//                                        StringProvider.ERROR_SEND_MESSAGE,
-//                                        Toast.LENGTH_LONG
-//                                    ).show()
-//                                }
-//                            }
+                            } catch (e: Exception) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        StringProvider.ERROR_SEND_MESSAGE,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
 
                         }
                     }

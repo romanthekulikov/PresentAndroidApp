@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 import com.example.present.activities.startPack.formPack.formStages.PointFormFragment
 import com.example.present.activities.startPack.formPack.formStages.PresentFormFragment
-import com.example.present.data.Pref
 import com.example.present.data.StringProvider
 import com.example.present.data.database.AppDatabase
 import com.example.present.data.database.entities.FormItemEntity

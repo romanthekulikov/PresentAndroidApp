@@ -1,7 +1,6 @@
 package com.example.present.adapters
 
 import android.net.Uri
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +18,6 @@ class FormAdapter(private val presents: List<FormItemEntity>) :
                 try {
                     binding.image.setImageURI(Uri.parse(item.presentImg))
                 } catch (_: Exception) {}
-                //MediaStore.Images.Media.getContentUri(item.presentImg)
-
                 binding.text.text = item.congratulation
             }
         }
