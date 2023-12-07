@@ -1,9 +1,11 @@
 package com.example.present.activities.gamePack.mainPack
 
 import android.app.ActionBar.LayoutParams
+import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.View
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -13,9 +15,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.present.R
+import com.example.present.activities.gamePack.chatPack.ChatActivity
 import com.example.present.data.StringProvider
 import com.example.present.databinding.ActivityMainBinding
 import kotlin.properties.Delegates
+
 
 const val HOME_POSITION = 0
 const val CHAT_POSITION = 1
@@ -52,6 +56,11 @@ class MainActivity : AppCompatActivity() {
         moveToFragment(fragmentMap[selectedNavigationItem]!!)
         listenersInit()
         addBackDispatcher()
+        //TODO: Зарефакторить
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
     }
 
     private fun listenersInit() {
@@ -70,10 +79,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             navigationChatLayout.setOnClickListener {
-                if (selectedNavigationItem != CHAT_POSITION) {
-                    changeNavBar(CHAT_POSITION)
-                    //moveToFragment(MainFragment())
-                }
+                val intent = Intent(this@MainActivity, ChatActivity::class.java)
+                startActivity(intent)
             }
             navigationSettingsLayout.setOnClickListener {
                 if (selectedNavigationItem != SETTINGS_POSITION) {

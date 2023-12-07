@@ -12,7 +12,6 @@
         android:layout_gravity="center"
         android:padding="10dp">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/hint_layout"
             android:layout_width="270dp"

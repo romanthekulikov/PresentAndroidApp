@@ -26,6 +26,9 @@
         android:theme="@style/Theme.Present"
         tools:targetApi="31">
         <activity
+            android:name=".activities.gamePack.chatPack.ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.startPack.gameSignInPack.SignInGameActivity"
             android:exported="false" />
         <activity
@@ -99,9 +102,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.gamePack.rulesPack.RulesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.gamePack.mapPack.MapActivity"
             android:exported="false" />
         <activity
             android:name=".activities.gamePack.presentPack.PresentActivity"

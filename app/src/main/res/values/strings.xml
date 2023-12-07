@@ -158,4 +158,5 @@
     <string name="navigation_chat_text">Чат</string>
     <string name="navigation_map_text">Карта</string>
     <string name="navigation_settings_text">Настройки</string>
+    <string name="chat_field_hint">Печатать тут...</string>
 </resources>

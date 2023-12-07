@@ -7,4 +7,5 @@
     <color name="trans_white">#70ffffff</color>
     <color name="transparent">#00ffffff</color>
     <color name="trans_white_white">#80ffffff</color>
+    <color name="trans_super_white">#90ffffff</color>
 </resources>
