@@ -1,129 +1,137 @@
 package com.example.present.activities.gamePack.mainPack
 
-import android.content.Intent
+import android.app.ActionBar.LayoutParams
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
+import android.util.TypedValue
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.present.R
 import com.example.present.data.StringProvider
 import com.example.present.databinding.ActivityMainBinding
-import com.example.present.dialog.DialogPresent
-import com.example.present.domain.IntentKeys
-import com.example.present.activities.gamePack.getPresentPack.GetPresentActivity
-import com.example.present.activities.gamePack.mapPack.MapActivity
-import com.example.present.activities.gamePack.presentPack.PresentActivity
-import com.example.present.activities.gamePack.rulesPack.RulesActivity
+import kotlin.properties.Delegates
+
+const val HOME_POSITION = 0
+const val CHAT_POSITION = 1
+const val MAP_POSITION = 2
+const val SETTINGS_POSITION = 3
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainVM: MainViewModel
-
     private var backPressed: Long = System.currentTimeMillis()
+    private lateinit var navigationItemsLayoutMap: MutableMap<Int, LinearLayout>
+    private lateinit var fragmentMap: MutableMap<Int, Fragment>
+    private var selectedNavigationItem by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         mainVM = ViewModelProvider(this, MainViewModelFactory(this))[MainViewModel::class.java]
-
-        initScreen()
-        observationInit()
+        navigationItemsLayoutMap = mutableMapOf(
+            HOME_POSITION to binding.navigationMainLayout,
+            CHAT_POSITION to binding.navigationChatLayout,
+            MAP_POSITION to binding.navigationMapLayout,
+            SETTINGS_POSITION to binding.navigationSettingsLayout
+        )
+        fragmentMap = mutableMapOf(
+            HOME_POSITION to MainFragment(),
+            CHAT_POSITION to MainFragment(),
+            MAP_POSITION to MapFragment(),
+            SETTINGS_POSITION to MainFragment()
+        )
+        selectedNavigationItem = mainVM.mutableNavPosition.value!!
+        changeNavBar(selectedNavigationItem)
+        moveToFragment(fragmentMap[selectedNavigationItem]!!)
         listenersInit()
         addBackDispatcher()
     }
 
-    private fun initScreen() {
-        mainVM.getData()
-        binding.apply {
-            hintText.text = mainVM.mutableHint.value
-        }
-    }
-
-    private fun observationInit() {
-        mainVM.mutableHint.observe(this) {
-            binding.hintText.text = it
-        }
-    }
-
     private fun listenersInit() {
         binding.apply {
-            rules.setOnClickListener {
-                val intent = Intent(this@MainActivity, RulesActivity::class.java)
-                startActivity(intent)
-            }
+            navigationMapLayout.setOnClickListener {
+                if (selectedNavigationItem != MAP_POSITION) {
+                    changeNavBar(MAP_POSITION)
+                    moveToFragment(MapFragment())
+                }
 
-            map.setOnClickListener {
-                val progress = mainVM.mutableProgress.value
-                val intent = Intent(this@MainActivity, MapActivity::class.java)
-                intent.putExtra(IntentKeys.PROGRESS_KEY, progress)
-                startActivity(intent)
             }
-
-            getHint.setOnClickListener {
-                getAdditionalDialog().show(
-                    supportFragmentManager,
-                    StringProvider.DIALOG_ADDITIONAL_TAG
-                )
-            }
-
-            check.setOnClickListener {
-                hideKeyboard()
-                if (mainVM.checkCode(inputCodeLayout.text.toString())) {
-                    getDialog().show(supportFragmentManager, StringProvider.DIALOG_CORRECT_TAG)
-                    mainVM.addProgress()
-                    inputCodeLayout.setText("")
-                } else {
-                    getErrorDialog().show(supportFragmentManager, StringProvider.DIALOG_ERROR_TAG)
+            navigationMainLayout.setOnClickListener {
+                if (selectedNavigationItem != HOME_POSITION) {
+                    changeNavBar(HOME_POSITION)
+                    moveToFragment(MainFragment())
                 }
             }
-
-            openAllPresent.setOnClickListener {
-                val intent = Intent(this@MainActivity, PresentActivity::class.java)
-                startActivity(intent)
+            navigationChatLayout.setOnClickListener {
+                if (selectedNavigationItem != CHAT_POSITION) {
+                    changeNavBar(CHAT_POSITION)
+                    //moveToFragment(MainFragment())
+                }
+            }
+            navigationSettingsLayout.setOnClickListener {
+                if (selectedNavigationItem != SETTINGS_POSITION) {
+                    changeNavBar(SETTINGS_POSITION)
+                    //moveToFragment(MainFragment())
+                }
             }
         }
     }
 
-    private fun getDialog(): DialogPresent {
-        val progress = mainVM.mutableProgress.value
-        val dialog = DialogPresent()
-        val message = StringProvider.dialogCongratulationTitleMap[progress]!!
-        dialog.setMessage(text = message)
-        dialog.setNegativeButtonText(text = StringProvider.NEGATIVE_DIALOG_BUTTON)
-        dialog.setPositiveButtonText(text = StringProvider.POSITIVE_DIALOG_BUTTON)
-        dialog.setPositiveAction {
-            val intent = Intent(this, GetPresentActivity::class.java)
-            intent.putExtra(IntentKeys.PROGRESS_KEY, progress)
-            startActivity(intent)
+    private fun changeNavBar(changeItemTo: Int) {
+        updateCurrentNavigationItemWeight(1f, true)
+        selectedNavigationItem = changeItemTo
+        mainVM.mutableNavPosition.value = changeItemTo
+        updateCurrentNavigationItemWeight(2f, false)
+    }
+
+    private fun updateCurrentNavigationItemWeight(weight: Float, needHide: Boolean) {
+        val previousItemLayout = navigationItemsLayoutMap[selectedNavigationItem]!!
+        val parentLayoutParams = previousItemLayout.layoutParams as LinearLayout.LayoutParams
+        val previousItem = previousItemLayout.getChildAt(0) as LinearLayout
+
+        parentLayoutParams.weight = weight
+        previousItemLayout.layoutParams = parentLayoutParams
+
+        val dp55ToPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            55f,
+            resources.displayMetrics
+        )
+        val itemTextLayout = previousItem.getChildAt(1) as TextView
+        val layoutParams = previousItem.layoutParams as LinearLayout.LayoutParams
+        if (needHide) {
+            previousItem.background = AppCompatResources.getDrawable(
+                applicationContext,
+                R.drawable.main_circle_border_off
+            )
+            layoutParams.width = dp55ToPx.toInt()
+            itemTextLayout.visibility = View.GONE
+        } else {
+            previousItem.background = AppCompatResources.getDrawable(
+                applicationContext,
+                R.drawable.main_circle_border_on
+            )
+            layoutParams.width = LayoutParams.WRAP_CONTENT
+            itemTextLayout.visibility = View.VISIBLE
         }
-
-        return dialog
+        previousItem.layoutParams = layoutParams
     }
 
-    private fun getAdditionalDialog(): DialogPresent {
-        val progress = mainVM.mutableProgress.value
-        val dialog = DialogPresent()
-        val message = StringProvider.additionalHintMap[progress]!!
-        dialog.setMessage(text = message)
-        dialog.setPositiveButtonText(text = StringProvider.POSITIVE_ADDITIONAL_BUTTON)
-
-        return dialog
-    }
-
-    private fun getErrorDialog(): DialogPresent {
-        val dialog = DialogPresent()
-        dialog.setMessage(text = StringProvider.DIALOG_ERROR_MESSAGE)
-        dialog.setPositiveButtonText(text = StringProvider.DIALOG_UNDERSTAND_BUTTON)
-
-        return dialog
-    }
-
-    private fun hideKeyboard() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+    private fun moveToFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(
+                binding.fragmentContainer.id,
+                fragment
+            )
+            .commit()
     }
 
     private fun addBackDispatcher() {

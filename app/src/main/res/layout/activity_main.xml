@@ -1,165 +1,195 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroung"
+    android:padding="20dp"
+    android:paddingTop="50dp"
     tools:context=".activities.gamePack.mainPack.MainActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="10dp">
+        app:layout_constraintBottom_toTopOf="@+id/menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/main_circle_border_on"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
-            android:id="@+id/rules_layout"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:id="@+id/navigation_main_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/rules"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/circle"
-                android:elevation="15dp"
-                android:gravity="center"
-                tools:ignore="UselessParent">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/rules_description"
-                    android:src="@drawable/ic_rules" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <LinearLayout
-                android:id="@+id/map"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/circle"
+                android:id="@+id/home"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/main_circle_border_off"
                 android:elevation="15dp"
                 android:gravity="center"
                 tools:ignore="UselessParent">
 
                 <ImageView
                     android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:contentDescription="@string/map_description"
-                    android:src="@drawable/ic_map" />
+                    android:src="@drawable/home" />
+                <TextView
+                    android:id="@+id/home_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:lines="1"
+                    android:visibility="gone"
+                    android:textSize="14sp"
+                    android:text="@string/navigation_home_text"/>
             </LinearLayout>
 
         </LinearLayout>
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/hint_layout"
-            android:layout_width="270dp"
-            android:layout_height="270dp"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/border"
+        <LinearLayout
+            android:id="@+id/navigation_chat_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:padding="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rules_layout">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/navigation_main_layout"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/hint_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:id="@+id/chat"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/main_circle_border_off"
+                android:elevation="15dp"
+                android:padding="8dp"
                 android:gravity="center"
-                android:text="@string/hint_text"
-                android:textColor="@color/black"
-                android:textSize="25sp"
-                app:layout_constraintBottom_toTopOf="@+id/get_hint"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:ignore="UselessParent">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/get_hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_style"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:text="@string/get_hint_text"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/map_description"
+                    android:paddingStart="3dp"
+                    android:paddingTop="2dp"
+                    android:src="@drawable/chat" />
 
-        <TextView
-            android:id="@+id/code_text"
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/chat_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:lines="1"
+                    android:textSize="14sp"
+                    android:text="@string/navigation_chat_text"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navigation_map_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/code_text"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hint_layout" />
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_code_layout"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/black"
+            android:layout_weight="1"
             android:gravity="center"
-            android:maxLength="4"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/code_text" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/navigation_chat_layout"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/button_style"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:text="@string/check_text"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/input_code_layout" />
+            <LinearLayout
+                android:id="@+id/map"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/main_circle_border_off"
+                android:elevation="15dp"
+                android:padding="8dp"
+                android:gravity="center"
+                tools:ignore="UselessParent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/open_all_present"
-            android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@string/map_description"
+                    android:src="@drawable/ic_map" />
+
+                <TextView
+                    android:id="@+id/map_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:lines="1"
+                    android:textSize="14sp"
+                    android:text="@string/navigation_map_text"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navigation_settings_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/button_style"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:text="@string/open_all_present"
-            android:textColor="@color/black"
-            android:textSize="18sp"
+            android:layout_weight="1"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/check" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toEndOf="@+id/navigation_map_layout"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <LinearLayout
+                android:id="@+id/settings"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:background="@drawable/main_circle_border_off"
+                android:elevation="15dp"
+                android:padding="8dp"
+                android:gravity="center"
+                tools:ignore="UselessParent">
 
-</ScrollView>
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:contentDescription="@string/map_description"
+                    android:src="@drawable/settings" />
+                <TextView
+                    android:id="@+id/settings_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginEnd="10dp"
+                    android:lines="1"
+                    android:text="@string/navigation_settings_text"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

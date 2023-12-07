@@ -17,6 +17,7 @@ class MainViewModel(
     private val getProgressUseCase: GetProgressUseCase
 ) : ViewModel() {
     var mutableProgress: MutableLiveData<Int> = MutableLiveData(BEGIN_PROGRESS)
+    var mutableNavPosition: MutableLiveData<Int> = MutableLiveData(HOME_POSITION)
     var mutableHint: MutableLiveData<String> = MutableLiveData(BEGIN_HINT)
     private var mutableAdditionalHint: MutableLiveData<String> =
         MutableLiveData(BEGIN_ADDITIONAL_HINT)
