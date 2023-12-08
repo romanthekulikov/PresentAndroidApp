@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.present.activities.gamePack.mapPack.Point
+import com.example.present.data.models.Point
 import com.example.present.data.StringProvider
 import com.example.present.data.models.PointFormModel
 import com.example.present.databinding.FrPointFormBinding
