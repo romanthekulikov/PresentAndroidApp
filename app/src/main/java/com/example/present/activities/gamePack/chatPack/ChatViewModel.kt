@@ -24,7 +24,8 @@ class ChatViewModel(
     private var chatReference = firebaseDB.getReference(CHAT_ROOMS_FIREBASE).child("1")
         .child(CHAT_MESSAGES)
     var messagesList: MutableLiveData<MutableList<Message>?> = MutableLiveData(mutableListOf())
-    val userId = 1
+    var userId = 1
+    var replayId: String? = null
 
     fun getMessages() {
         chatReference.addValueEventListener(object : ValueEventListener {
@@ -39,6 +40,11 @@ class ChatViewModel(
     }
 
     fun sendMessageToFirebase(text: String) {
-        sendToFirebaseUC.execute(text = text, chatReference = chatReference, userId = userId)
+        sendToFirebaseUC.execute(
+            text = text,
+            chatReference = chatReference,
+            userId = userId,
+            replayId = replayId
+        )
     }
 }

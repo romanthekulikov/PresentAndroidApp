@@ -9,6 +9,7 @@ class GetMessagesUC {
         for (snapshot in snapshots.children) {
             val message = snapshot.getValue(Message::class.java)
             if (message != null) {
+                message.messageId = snapshot.key
                 messagesList.add(message)
             }
         }
