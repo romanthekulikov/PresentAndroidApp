@@ -3,9 +3,9 @@ package com.example.present.activities.gamePack.mainPack
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.present.data.StringProvider
-import com.example.present.domain.mainUseCase.AddProgressUseCase
-import com.example.present.domain.mainUseCase.CheckCodeUseCase
-import com.example.present.domain.mainUseCase.GetProgressUseCase
+import com.example.present.domain.mainUseCases.AddProgressUseCase
+import com.example.present.domain.mainUseCases.CheckCodeUseCase
+import com.example.present.domain.mainUseCases.GetProgressUseCase
 
 const val BEGIN_PROGRESS = 0
 const val BEGIN_HINT = "Первая подсказка"

@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.present.data.MainInfoRepositoryImpl
-import com.example.present.domain.mainUseCase.AddProgressUseCase
-import com.example.present.domain.mainUseCase.CheckCodeUseCase
-import com.example.present.domain.mainUseCase.GetProgressUseCase
+import com.example.present.domain.mainUseCases.AddProgressUseCase
+import com.example.present.domain.mainUseCases.CheckCodeUseCase
+import com.example.present.domain.mainUseCases.GetProgressUseCase
 
 class MainViewModelFactory(context: Context) : ViewModelProvider.Factory {
     private val mainInfoRepository by lazy(LazyThreadSafetyMode.NONE) {

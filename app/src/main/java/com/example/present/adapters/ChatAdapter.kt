@@ -15,7 +15,7 @@ import java.util.Locale
 
 const val USER_TYPE = 0
 const val APPENDER_TYPE = 1
-class ChatAdapter(private val messagesList: List<Message>, private val userId: Int) :
+class ChatAdapter(private var messagesList: List<Message>, private val userId: Int) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var bindingUserMessage: ChatMessageUserItemBinding
     private lateinit var bindingAppenderMessage: ChatMessageAppenderItemBinding
@@ -71,5 +71,12 @@ class ChatAdapter(private val messagesList: List<Message>, private val userId: I
             return USER_TYPE
         }
         return APPENDER_TYPE
+    }
+
+    fun updateData(newList: List<Message>) {
+        val currentSize = messagesList.size
+        val newItemCount = newList.size - currentSize
+        messagesList = newList
+        if (newItemCount >= 0) notifyItemRangeChanged(currentSize, newItemCount)
     }
 }

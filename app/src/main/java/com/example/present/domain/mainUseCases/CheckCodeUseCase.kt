@@ -1,4 +1,4 @@
-package com.example.present.domain.mainUseCase
+package com.example.present.domain.mainUseCases
 
 import com.example.present.domain.MainInfoRepository
 

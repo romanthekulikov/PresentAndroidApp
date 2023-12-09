@@ -3,8 +3,8 @@ package com.example.present.activities.gamePack.presentPack
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.present.data.models.PresentModel
-import com.example.present.domain.mainUseCase.GetPresentListUseCase
-import com.example.present.domain.mainUseCase.GetProgressUseCase
+import com.example.present.domain.mainUseCases.GetPresentListUseCase
+import com.example.present.domain.mainUseCases.GetProgressUseCase
 
 const val BEGIN_PROGRESS = 0
 
