@@ -159,4 +159,7 @@
     <string name="navigation_map_text">Карта</string>
     <string name="navigation_settings_text">Настройки</string>
     <string name="chat_field_hint">Печатать тут...</string>
+    <string name="chat_item_dialog_replay_text">Ответить</string>
+    <string name="chat_item_dialog_edit_text">Изменить</string>
+    <string name="chat_item_dialog_delete_text">Удалить</string>
 </resources>

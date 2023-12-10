@@ -3,7 +3,7 @@ package com.example.present.domain.chatUseCases
 import com.example.present.data.models.Message
 import com.google.firebase.database.DatabaseReference
 
-class SendMessageToFirebaseUseCase {
+class SendMessageUseCase {
     fun execute(text: String, chatReference: DatabaseReference, userId: Int, replayId: String?) {
         val msg = Message(
             text = text,

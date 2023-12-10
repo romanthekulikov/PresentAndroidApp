@@ -112,6 +112,7 @@
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/dark_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -154,12 +155,12 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/chat_field_bg"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -197,7 +198,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/replay_user_name" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
             <EditText

@@ -5,5 +5,9 @@ data class Message(
     var time: Long? = null,
     var userId: Int? = null,
     var messageId: String? = null, //TODO: Сменить String на Int
-    var replayId: String? = null
+    var replayId: String? = null,
+    var replayText: String? = null,
+    var replayUserId: Int? = null,
+    var replayPosition: Int? = null,
+    var isEdit: Boolean = false
 )

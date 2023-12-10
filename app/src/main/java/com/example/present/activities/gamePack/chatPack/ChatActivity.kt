@@ -3,6 +3,7 @@ package com.example.present.activities.gamePack.chatPack
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.present.adapters.ChatAdapter
+import com.example.present.data.models.Message
 import com.example.present.databinding.ActivityChatBinding
+import com.example.present.dialog.ChatItemDialog
+
 
 class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
     private lateinit var binding: ActivityChatBinding
@@ -51,9 +55,22 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
                 // ссылка на картинку при ее наличии)
                 val text = message.text.toString()
                 if (text.isNotEmpty()) {
-                    vm.sendMessageToFirebase(text)
-                    message.setText("")
+                    if (vm.isTextEdit) {
+                        val message =
+                            vm.messagesList.value?.find { it.messageId == vm.editableMessageId }
+                        try {
+                            if (message!!.text != text) {
+                                message.isEdit = true
+                                message.text = text
+                                vm.editMessage(message)
+                                vm.isTextEdit = false
+                            }
+                        } catch (_: Exception) {}
+                    } else {
+                        vm.sendMessageToFirebase(text)
+                    }
                 }
+                message.setText("")
                 replayLayout.visibility = View.GONE
                 vm.replayId = null
             }
@@ -76,13 +93,16 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
 
     private fun observersInit() {
         vm.messagesList.observe(this) {
-            binding.progress.visibility = View.GONE
+            val chatState = binding.recyclerChat.layoutManager?.onSaveInstanceState()
             try {
-                chatAdapter.updateData(newList = it!!)
-                binding.recyclerChat.smoothScrollToPosition(it.size - 1)
-            } catch (_: IllegalArgumentException) {
-            } catch (_: NullPointerException) {
-            }
+                val newItemCount = it!!.size - chatAdapter.itemCount
+                chatAdapter.updateData(newList = it)
+                if (newItemCount > 0) {
+                    binding.progress.visibility = View.GONE
+                    binding.recyclerChat.smoothScrollToPosition(it.size - 1)
+                }
+            } catch (_: Exception) {}
+            binding.recyclerChat.layoutManager?.onRestoreInstanceState(chatState)
         }
     }
 
@@ -125,11 +145,39 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
     override fun clickOnReplayMessage(position: Int) {
         try {
             binding.recyclerChat.smoothScrollToPosition(position)
-        } catch (_: IllegalArgumentException) {}
+        } catch (_: IllegalArgumentException) {
+        }
     }
 
-    override fun onDestroy() {
-        vm.messagesList.value?.clear()
-        super.onDestroy()
+    override fun longClickListener(message: Message, touchX: Int, touchY: Int) {
+        val gravityDialog = if (message.userId == vm.userId) Gravity.START else Gravity.END
+        val dialog = ChatItemDialog(
+            context = this,
+            touchX = touchX,
+            touchY = touchY,
+            gravity = gravityDialog,
+            messageActions = object : ChatItemDialog.SetAction {
+                override fun replayAction() {
+                    vm.replayId = message.messageId
+                    binding.apply {
+                        replayLayout.visibility = View.VISIBLE
+                        replayText.text = message.text
+                        replayUserName.text = "Пользователь${message.userId}"
+                    }
+
+                }
+
+                override fun editAction() {
+                    vm.isTextEdit = true
+                    vm.editableMessageId = message.messageId
+                    binding.message.setText(message.text)
+                }
+
+                override fun deleteAction() {
+                    vm.deleteMessage(messageId = message.messageId!!)
+                }
+
+            })
+        dialog.show()
     }
 }

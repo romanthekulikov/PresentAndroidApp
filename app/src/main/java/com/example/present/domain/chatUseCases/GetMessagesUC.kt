@@ -10,6 +10,16 @@ class GetMessagesUC {
             val message = snapshot.getValue(Message::class.java)
             if (message != null) {
                 message.messageId = snapshot.key
+                if (!message.replayId.isNullOrEmpty()) {
+                    val replayMessage = messagesList.find { it.messageId == message.replayId }
+                    if (replayMessage != null) {
+                        message.replayText = replayMessage.text
+                        message.replayUserId = replayMessage.userId
+                        message.replayPosition = messagesList.indexOf(replayMessage)
+                    } else {
+                        message.replayId = null
+                    }
+                }
                 messagesList.add(message)
             }
         }
