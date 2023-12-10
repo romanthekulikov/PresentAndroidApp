@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.present.data.models.Message
 import com.example.present.databinding.ChatMessageAppenderItemBinding
 import com.example.present.databinding.ChatMessageUserItemBinding
-import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -18,75 +17,82 @@ import java.util.Locale
 const val USER_TYPE = 0
 const val APPENDER_TYPE = 1
 
-class ChatAdapter(private var messagesList: List<Message>, private val userId: Int, private val listener: ClickListener) :
+class ChatAdapter(
+    private var messagesList: List<Message>,
+    private val userId: Int,
+    private val listener: ClickListener
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var bindingUserMessage: ChatMessageUserItemBinding
     private lateinit var bindingAppenderMessage: ChatMessageAppenderItemBinding
 
     class UserMessageViewHolder(
         private val binding: ChatMessageUserItemBinding,
-        private var messagesList: List<Message>,
         private val listener: ClickListener
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Message) {
             val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT
             )
             params.gravity = Gravity.END
+            binding.mainLayout.layoutParams = params
             binding.apply {
-                mainLayout.layoutParams = params
                 text.text = item.text
                 val formatter = SimpleDateFormat("HH:mm", Locale("ru"))
                 val timeSend = formatter.format(item.time)
                 time.text = timeSend
-                val replayMessage = messagesList.find { it.messageId == item.replayId }
-                if (item.replayId != null) {
-                    try {
-                        replayLayout.visibility = View.VISIBLE
-                        replayText.text = replayMessage!!.text
-                        replayName.text = "Пользователь${replayMessage.userId}"
-                    } catch (_: NullPointerException) {
-                        replayLayout.visibility = View.GONE
-                    }
+                if (!item.replayId.isNullOrEmpty()) {
+                    replayLayout.visibility = View.VISIBLE
+                    replayText.text = item.replayText
+                    replayName.text = "Пользователь ${item.replayUserId}"
+                } else {
+                    replayLayout.visibility = View.GONE
+                }
+                if (item.isEdit) {
+                    binding.editedMark.visibility = View.VISIBLE
+                } else {
+                    binding.editedMark.visibility = View.GONE
                 }
                 replayLayout.setOnClickListener {
-                    if (item.replayId != null) {
-                        listener.clickOnReplayMessage(messagesList.indexOf(replayMessage))
-                    }
+                    item.replayPosition?.let { it1 -> listener.clickOnReplayMessage(it1) }
+                }
+                mainLayout.setOnLongClickListener {
+                    val location = IntArray(2)
+                    it.getLocationOnScreen(location)
+                    val x = location[0]
+                    val y = location[1]
+                    listener.longClickListener(item, x, y)
+                    return@setOnLongClickListener true
                 }
             }
-
         }
     }
 
     class AppenderMessageViewHolder(
         private val binding: ChatMessageAppenderItemBinding,
-        private var messagesList: List<Message>,
         private val listener: ClickListener
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Message) {
             binding.apply {
                 text.text = item.text
                 val formatter = SimpleDateFormat("HH:mm", Locale("ru"))
                 val timeSend = formatter.format(item.time)
                 time.text = timeSend
-                val replayMessage = messagesList.find { it.messageId == item.replayId }
-                if (item.replayId != null) {
-                    try {
-                        replayLayout.visibility = View.VISIBLE
-                        replayText.text = replayMessage!!.text
-                        replayName.text = "Пользователь${replayMessage.userId}"
-                    } catch (_: NullPointerException) {
-                        replayLayout.visibility = View.GONE
-                    }
+                if (!item.replayId.isNullOrEmpty()) {
+                    replayLayout.visibility = View.VISIBLE
+                    replayText.text = item.replayText
+                    replayName.text = "Пользователь ${item.replayUserId}"
+                } else {
+                    replayLayout.visibility = View.GONE
+                }
+                if (item.isEdit) {
+                    binding.editedMark.visibility = View.VISIBLE
+                } else {
+                    binding.editedMark.visibility = View.GONE
                 }
                 replayLayout.setOnClickListener {
-                    if (item.replayId != null) {
-                        listener.clickOnReplayMessage(messagesList.indexOf(replayMessage))
-                    }
+                    item.replayPosition?.let { it1 -> listener.clickOnReplayMessage(it1) }
                 }
             }
         }
@@ -99,13 +105,11 @@ class ChatAdapter(private var messagesList: List<Message>, private val userId: I
         return when (viewType) {
             USER_TYPE -> UserMessageViewHolder(
                 binding = bindingUserMessage,
-                messagesList = messagesList,
                 listener = listener
             )
 
             else -> AppenderMessageViewHolder(
                 binding = bindingAppenderMessage,
-                messagesList = messagesList,
                 listener = listener
             )
         }
@@ -134,10 +138,15 @@ class ChatAdapter(private var messagesList: List<Message>, private val userId: I
         val currentSize = messagesList.size
         val newItemCount = newList.size - currentSize
         messagesList = newList
-        if (newItemCount >= 0) notifyItemRangeChanged(currentSize, newItemCount)
+        if (newItemCount > 0) notifyItemRangeChanged(currentSize, newItemCount)
+        else {
+            notifyItemRangeRemoved(0, currentSize)
+            notifyItemRangeInserted(0, messagesList.size)
+        }
     }
 
     interface ClickListener {
         fun clickOnReplayMessage(position: Int)
+        fun longClickListener(message: Message, touchX: Int, touchY: Int)
     }
 }
