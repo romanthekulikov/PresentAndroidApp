@@ -12,13 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import com.example.present.R
 import com.example.present.activities.gamePack.mainPack.MainActivity
+import com.example.present.activities.profilePack.ProfileActivity
 import com.example.present.data.StringProvider
 import com.example.present.data.database.AppDatabase
+import com.example.present.data.database.entities.ChatEntity
 import com.example.present.data.database.entities.GameEntity
 import com.example.present.data.database.entities.PresentEntity
 import com.example.present.data.database.entities.StageEntity
 import com.example.present.databinding.ActivitySignInGameBinding
 import com.example.present.domain.IntentKeys
+import com.example.present.remote.ApiProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,68 +67,79 @@ class SignInGameActivity : AppCompatActivity() {
 
         binding.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, progress: Int, p2: Boolean) {
-                if (progress == 100) {
-                    if (passwordIsCorrect()) {
-                        //TODO: Тут будет обмен с ВС и получение данных по
-                        // игре(Если приходящий id_admin == id_user, то показываем mod admin)
-                        //TODO: Убрать заглушку(запись в БД пришедших данных):
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val game = GameEntity(0, 0, 1, System.currentTimeMillis())
-                            val present1 = PresentEntity(
-                                0,
-                                0,
-                                "Поздравительный текст",
-                                "",
-                                StringProvider.OZON_REDIRECT_URL
-                            )
-                            val present2 = PresentEntity(
-                                1,
-                                1,
-                                "Еще один поздравительный текст",
-                                "",
-                                "http://"
-                            )
-                            val stage1 = StageEntity(
-                                0,
-                                0,
-                                "Текст точки",
-                                "Подсказка для точки",
-                                47.84233,
-                                56.6512,
-                                false
-                            )
-                            val stage2 = StageEntity(
-                                1,
-                                0,
-                                "Еще один текст точки",
-                                "Еще одна подсказка для точки",
-                                47.86532,
-                                56.64003,
-                                false
-                            )
-                            try {
-                                val db = AppDatabase.getDB(applicationContext)
-                                db.getGameDao().saveGame(game)
-                                db.getPresentDao().savePresent(present1)
-                                db.getPresentDao().savePresent(present2)
-                                db.getStageDao().saveStage(stage1)
-                                db.getStageDao().saveStage(stage2)
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (progress == 100) {
+                        try {
+                            val gameSet = getGameSetIfExist()
+                            if (gameSet != null) {
+                                try {
+                                    val db = AppDatabase.getDB(applicationContext)
+                                    val stages = gameSet.stages
+                                    val presents = gameSet.presents
+                                    val responseGame = gameSet.game
+                                    val stageDao = db.getStageDao()
+                                    val presentDao = db.getPresentDao()
+                                    for (i in stages.indices) {
+                                        val stage = StageEntity(
+                                            stages[i].id_stage,
+                                            stages[i].id_game,
+                                            stages[i].id_present,
+                                            stages[i].text_stage,
+                                            stages[i].hint_text,
+                                            stages[i].long,
+                                            stages[i].lat,
+                                            stages[i].is_done
+                                        )
+                                        stageDao.saveStage(stage)
+                                        val present = PresentEntity(
+                                            stages[i].id_present,
+                                            stages[i].id_stage,
+                                            presents[i].present_text,
+                                            presents[i].present_img,
+                                            presents[i].redirect_link
+                                        )
+                                        presentDao.savePresent(present)
+                                    }
+                                    val game = GameEntity(
+                                        responseGame.id_game,
+                                        responseGame.id_admin,
+                                        responseGame.id_user,
+                                        responseGame.start_date,
+                                        responseGame.chat_id
+                                    )
+                                    db.getGameDao().saveGame(game)
+                                    val chatApi = ApiProvider.chatApi
+                                    val chatSettings = chatApi.getChatSettings(responseGame.chat_id).execute().body()
+                                    if (chatSettings != null) {
+                                        db.getChatDao().insertChat(
+                                            ChatEntity(
+                                                chatSettings.id,
+                                                chatSettings.bgColor,
+                                                chatSettings.bgImage,
+                                                chatSettings.textSize
+                                            )
+                                        )
+                                    }
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        val intent = Intent(this@SignInGameActivity, MainActivity::class.java)
+                                        startActivity(intent)
+                                        finish()
+                                    }
+                                } catch (e: Exception) {
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        Toast.makeText(this@SignInGameActivity, e.message, Toast.LENGTH_LONG).show()
+                                    }
+                                }
 
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    val intent = Intent(this@SignInGameActivity, MainActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                            } catch (e: Exception) {
-                                CoroutineScope(Dispatchers.Main).launch {
-                                    Toast.makeText(
-                                        applicationContext,
-                                        StringProvider.ERROR_SEND_MESSAGE,
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
                             }
-
+                        } catch (e: Exception) {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                Toast.makeText(
+                                    applicationContext,
+                                    StringProvider.ERROR_SEND_MESSAGE,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }
                     }
                 }
@@ -136,17 +150,31 @@ class SignInGameActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(p0: SeekBar?) {}
 
         })
+
+        binding.profile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 
-    private fun passwordIsCorrect(): Boolean {
-        var isCorrect = true
-        //TODO: Пока без проверок на ВС, длина тоже будет варийроваться
-        if (binding.password.text.toString().length < 7) {
+    private fun getGameSetIfExist(): EnterResponse? {
+        val gameApi = ApiProvider.gameApi
+        val db = AppDatabase.getDB(applicationContext)
+        val user = db.getUserDao().getUser()
+        val gameSet = gameApi.enterTheGame(user!!.id, binding.password.text.toString()).execute().body()
+        if (gameSet == null) {
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(this@SignInGameActivity, "Проблемы сервера. Попробуйте позже", Toast.LENGTH_LONG).show()
+            }
+        } else if (gameSet.error != null) {
             binding.password.error = "Не правильный пароль"
-            isCorrect = false
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(this@SignInGameActivity, gameSet.message, Toast.LENGTH_LONG).show()
+            }
+            return null
         }
 
-        return isCorrect
+        return gameSet
     }
 
     private fun addBackPressed() {
@@ -157,4 +185,37 @@ class SignInGameActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(backPressedCallback)
     }
+
+    data class EnterResponse(
+        val game: EnterGameObject,
+        val stages: List<EnterStageObject>,
+        val presents: List<EnterPresentObject>,
+        val error: Int?,
+        val message: String?
+    )
+
+    data class EnterGameObject(
+        val id_game: Int,
+        val id_admin: Int,
+        val id_user: Int,
+        val start_date: String,
+        val chat_id: Int
+    )
+
+    data class EnterStageObject(
+        val id_stage: Int,
+        val id_present: Int,
+        val id_game: Int,
+        val text_stage: String,
+        val hint_text: String,
+        val long: Double,
+        val lat: Double,
+        val is_done: Boolean
+    )
+
+    data class EnterPresentObject(
+        val present_text: String,
+        val present_img: String,
+        val redirect_link: String
+    )
 }

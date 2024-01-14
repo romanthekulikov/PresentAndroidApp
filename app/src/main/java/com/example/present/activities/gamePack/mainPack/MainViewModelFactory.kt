@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.present.data.MainInfoRepositoryImpl
 import com.example.present.domain.mainUseCases.AddProgressUseCase
 import com.example.present.domain.mainUseCases.CheckCodeUseCase
+import com.example.present.domain.mainUseCases.GetDatabase
 import com.example.present.domain.mainUseCases.GetProgressUseCase
 
 class MainViewModelFactory(context: Context) : ViewModelProvider.Factory {
@@ -25,13 +26,18 @@ class MainViewModelFactory(context: Context) : ViewModelProvider.Factory {
         GetProgressUseCase(mainInfoRepository = mainInfoRepository)
     }
 
+    private val getDatabase by lazy(LazyThreadSafetyMode.NONE) {
+        GetDatabase(context = context)
+    }
+
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         return MainViewModel(
             checkCodeUseCase,
             addProgressUseCase,
-            getProgressUseCase
+            getProgressUseCase,
+            getDatabase
         ) as T
     }
 }

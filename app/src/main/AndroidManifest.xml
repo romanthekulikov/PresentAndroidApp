@@ -26,6 +26,12 @@
         android:theme="@style/Theme.Present"
         tools:targetApi="31">
         <activity
+            android:name=".activities.gamePack.endPack.EndActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.profilePack.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.gamePack.chatPack.ChatActivity"
             android:exported="false" />
         <activity

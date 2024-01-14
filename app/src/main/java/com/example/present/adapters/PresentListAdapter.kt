@@ -8,7 +8,6 @@ import com.example.present.databinding.ItemPresentBinding
 
 class PresentListAdapter(
     private var presentList: List<PresentModel>,
-    private val progress: Int = 0,
     private val listener: PresentAdapterFunc
 ) : RecyclerView.Adapter<PresentListAdapter.ViewHolder>() {
 
@@ -23,11 +22,12 @@ class PresentListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             with(presentList[position]) {
-                binding.present.text = this.name
-                if (this.accessLevel <= progress) {
+                val presentName = "Подарок №${position + 1}"
+                binding.present.text = presentName
+                if (this.isAvailable) {
                     binding.present.alpha = 1f
                     binding.present.setOnClickListener {
-                        listener.onButtonClick(this.accessLevel - 1)
+                        listener.onButtonClick(this.presentId)
                     }
                 }
 

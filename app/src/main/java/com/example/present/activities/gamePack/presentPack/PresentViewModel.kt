@@ -17,8 +17,4 @@ class PresentViewModel(
     fun getData() {
         progress.value = getProgressUseCase.execute()
     }
-
-    fun getPresentList(): List<PresentModel> {
-        return getPresentListUseCase.execute()
-    }
 }

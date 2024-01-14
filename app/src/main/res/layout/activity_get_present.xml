@@ -32,7 +32,6 @@
             android:layout_marginBottom="50dp"
             android:background="@drawable/border"
             android:padding="15dp"
-            android:text="@string/first_congratulation"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/open"
             app:layout_constraintEnd_toEndOf="parent"
@@ -62,5 +61,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

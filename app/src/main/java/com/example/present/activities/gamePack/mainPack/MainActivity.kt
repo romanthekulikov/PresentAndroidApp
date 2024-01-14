@@ -16,8 +16,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.present.R
 import com.example.present.activities.gamePack.chatPack.ChatActivity
+import com.example.present.activities.gamePack.endPack.EndActivity
+import com.example.present.activities.gamePack.presentPack.PresentActivity
+import com.example.present.activities.profilePack.ProfileActivity
 import com.example.present.data.StringProvider
+import com.example.present.data.database.AppDatabase
 import com.example.present.databinding.ActivityMainBinding
+import com.example.present.domain.IntentKeys
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
 
@@ -39,11 +47,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mainVM = ViewModelProvider(this, MainViewModelFactory(this))[MainViewModel::class.java]
+        val taskActivity = intent.extras?.getString(IntentKeys.TASK_ACTIVITY, null)
+        val taskArg =  intent.extras?.getString(IntentKeys.TASK_ARG, null)
+        if (taskActivity == "main") {
+            mainVM.taskArg = taskArg
+        }
         navigationItemsLayoutMap = mutableMapOf(
             HOME_POSITION to binding.navigationMainLayout,
             CHAT_POSITION to binding.navigationChatLayout,
             MAP_POSITION to binding.navigationMapLayout,
-            SETTINGS_POSITION to binding.navigationSettingsLayout
+            SETTINGS_POSITION to binding.navigationPresentsLayout
         )
         fragmentMap = mutableMapOf(
             HOME_POSITION to MainFragment(),
@@ -56,11 +69,18 @@ class MainActivity : AppCompatActivity() {
         moveToFragment(fragmentMap[selectedNavigationItem]!!)
         listenersInit()
         addBackDispatcher()
-        //TODO: Зарефакторить
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
+
+        mainVM.mutableHint.observe(this) {
+            if (it == "") {
+                val intent = Intent(this, EndActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 
     private fun listenersInit() {
@@ -79,14 +99,29 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             navigationChatLayout.setOnClickListener {
-                val intent = Intent(this@MainActivity, ChatActivity::class.java)
-                startActivity(intent)
-            }
-            navigationSettingsLayout.setOnClickListener {
-                if (selectedNavigationItem != SETTINGS_POSITION) {
-                    changeNavBar(SETTINGS_POSITION)
-                    //moveToFragment(MainFragment())
+                CoroutineScope(Dispatchers.IO).launch {
+                    val chatDao = AppDatabase.getDB(this@MainActivity).getChatDao()
+                    val chatId = chatDao.getChat().idChat
+                    val userDao = AppDatabase.getDB(this@MainActivity).getUserDao()
+                    val userId = userDao.getUser()!!.id
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val intent = Intent(this@MainActivity, ChatActivity::class.java)
+                        intent.putExtra("chatId", chatId)
+                        intent.putExtra("userId", userId)
+                        startActivity(intent)
+                    }
                 }
+
+            }
+            navigationPresentsLayout.setOnClickListener {
+                if (selectedNavigationItem != SETTINGS_POSITION) {
+                    val intent = Intent(this@MainActivity, PresentActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            profile.setOnClickListener {
+                val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+                startActivity(intent)
             }
         }
     }

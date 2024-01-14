@@ -11,6 +11,7 @@ data class StageEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_stage") val id: Int,
     @ColumnInfo(name = "id_game") val idGame: Int,
+    @ColumnInfo(name = "id_present") val idPresent: Int,
     @ColumnInfo(name = "text_stage") val textStage: String,
     @ColumnInfo(name = "hint_stage") val textHint: String,
     @ColumnInfo(name = "longitude") val longitude: Double,

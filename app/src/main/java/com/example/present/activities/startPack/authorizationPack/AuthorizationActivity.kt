@@ -12,6 +12,8 @@ import com.example.present.data.database.AppDatabase
 import com.example.present.data.database.entities.UserEntity
 import com.example.present.databinding.ActivityAuthorizationBinding
 import com.example.present.domain.IntentKeys
+import com.example.present.remote.ApiProvider
+import com.google.common.base.MoreObjects.ToStringHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +23,7 @@ class AuthorizationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthorizationBinding
     private var taskActivity = ""
     private var taskArg = ""
+    private var isSignUp = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthorizationBinding.inflate(layoutInflater)
@@ -33,8 +36,25 @@ class AuthorizationActivity : AppCompatActivity() {
 
         binding.enter.setOnClickListener {
             if (!fieldsIncorrect()) {
-                authorization()
+                if (isSignUp) {
+                    signUp()
+                } else {
+                    signIn()
+                }
+
             }
+        }
+        binding.signUp.setOnClickListener {
+            if (!isSignUp) {
+                isSignUp = true
+                binding.enterText.text = "Регистрация"
+                binding.signUp.text = "Авторизация"
+            } else {
+                isSignUp = false
+                binding.enterText.text = "Авторизация"
+                binding.signUp.text = "Или пройти регистрацию"
+            }
+
         }
     }
 
@@ -52,21 +72,57 @@ class AuthorizationActivity : AppCompatActivity() {
         return authHasError
     }
 
-    private fun authorization() {
-        //TODO: Тут отправляются данные на проверку
-        //TODO: Если приходит успешно -- пропускаем, если ошибка, то по ошибке смотрим гле ошибся пользователь
+    private fun signIn() {
         CoroutineScope(Dispatchers.IO).launch {
-            val db = AppDatabase.getDB(applicationContext)
-            val user = UserEntity(0, "Роман", "", binding.email.text.toString())
-            db.getUserDao().saveUser(user)
-            CoroutineScope(Dispatchers.Main).launch {
-                //TODO: Пока на экран выбора режима, далее нужно подгрузить инфй и переводить на главный экран
-                val intent = Intent(applicationContext, AppModeActivity::class.java)
-                intent.putExtra(IntentKeys.TASK_ACTIVITY, taskActivity)
-                intent.putExtra(IntentKeys.TASK_ARG, taskArg)
-                startActivity(intent)
-                finish()
+            val userApi = ApiProvider.userApi
+            val authQuery = userApi.auth(email = binding.email.text.toString(), password = binding.password.text.toString())
+            val response = authQuery.execute().body()
+            try {
+                if (response!!.error == null) {
+                    val db = AppDatabase.getDB(applicationContext)
+                    val user = UserEntity(response.userId, response.name, response.icon, response.email)
+                    db.getUserDao().saveUser(user)
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val intent = Intent(applicationContext, AppModeActivity::class.java)
+                        intent.putExtra(IntentKeys.TASK_ACTIVITY, taskActivity)
+                        intent.putExtra(IntentKeys.TASK_ARG, taskArg)
+                        startActivity(intent)
+                        finish()
+                    }
+                } else {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(this@AuthorizationActivity, response.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            } catch (e: Exception) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(this@AuthorizationActivity, "Произошла проблема", Toast.LENGTH_LONG).show()
+                }
             }
+
+        }
+    }
+
+    private fun signUp() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val userApi = ApiProvider.userApi
+            val regQuery = userApi.reg(email = binding.email.text.toString(), password = binding.password.text.toString())
+            val response = regQuery.execute().body()
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    if (response!!.error == 200) {
+                        Toast.makeText(this@AuthorizationActivity, response.message, Toast.LENGTH_LONG).show()
+                        isSignUp = false
+                        binding.enterText.text = "Авторизация"
+                        binding.signUp.text = "Или пройти регистрацию"
+                    } else {
+                        Toast.makeText(this@AuthorizationActivity, response.message, Toast.LENGTH_LONG).show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(this@AuthorizationActivity, "Произошла проблема", Toast.LENGTH_LONG).show()
+                }
+            }
+
         }
     }
 

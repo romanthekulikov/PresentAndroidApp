@@ -15,6 +15,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -32,6 +33,7 @@ class PresentFormFragment(
         var imageCompanion: Uri = Uri.EMPTY
         var bitmap: Bitmap? = null
         var qr: Bitmap? = null
+        var key: String? = null
     }
 
     private lateinit var _binding: FrPresentFormBinding
@@ -40,7 +42,6 @@ class PresentFormFragment(
         savedInstanceState: Bundle?
     ): View {
         _binding = FrPresentFormBinding.inflate(layoutInflater)
-
 
         fillFields()
         listenersInit()
@@ -91,12 +92,15 @@ class PresentFormFragment(
         }
 
         _binding.keyOpen.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                _binding.qrImage.visibility = View.VISIBLE
+            }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun afterTextChanged(p0: Editable?) {
                 try {
+                    key = _binding.keyOpen.text.toString()
                     if (_binding.keyOpen.text!!.isEmpty()) {
                         _binding.qrImage.visibility = View.GONE
                         _binding.downloadQr.visibility = View.GONE
@@ -111,10 +115,12 @@ class PresentFormFragment(
     }
 
     private fun generateQR() {
-        val key = rand()
+        if (key.isNullOrEmpty()) {
+            key = rand()
+        }
         val text =
             StringProvider.APP_DEEPLINK_BASE + StringProvider.APP_DEEPLINK_MAIN + StringProvider.ADD_CODE + key
-        _binding.keyOpen.setText(text)
+        _binding.keyOpen.setText(key)
         val qrView = QRCode.ofSquares()
             .withBackgroundColor(Color.TRANSPARENT)
             .withSize(30)
@@ -133,15 +139,15 @@ class PresentFormFragment(
     }
 
     private fun saveQR(bitmap: Bitmap) {
-        val file = File("/storage/emulated/0/Download", "qr.png")
+        val file = File("/storage/emulated/0/Download", "$key.png")
         file.outputStream().use {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
         }
     }
 
-    private fun rand(): Int {
+    private fun rand(): String {
         require(100000000 <= 999999999) { "Illegal Argument" }
-        return (100000000..999999999).random()
+        return (100000000..999999999).random().toString()
     }
 
     private fun sentPresentToActivity() {
@@ -159,6 +165,10 @@ class PresentFormFragment(
         if (link.isEmpty()) {
             presentHasError = true
             _binding.link.error = StringProvider.ERROR_LINK_PRESENT
+        }
+        if (!URLUtil.isValidUrl(link)) {
+            presentHasError = true
+            _binding.link.error = StringProvider.ERROR_INVALID_LINK_PRESENT
         }
         if (key.isEmpty()) {
             presentHasError = true

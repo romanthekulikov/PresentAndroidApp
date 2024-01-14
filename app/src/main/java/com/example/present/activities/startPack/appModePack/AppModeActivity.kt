@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.present.activities.profilePack.ProfileActivity
 import com.example.present.activities.startPack.formPack.FormActivity
 import com.example.present.activities.startPack.gameSignInPack.SignInGameActivity
 import com.example.present.data.StringProvider
@@ -39,6 +40,11 @@ class AppModeActivity : AppCompatActivity() {
                 val intent = Intent(this@AppModeActivity, SignInGameActivity::class.java)
                 startActivity(intent)
             }
+        }
+
+        binding.profile.setOnClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
         }
     }
 }

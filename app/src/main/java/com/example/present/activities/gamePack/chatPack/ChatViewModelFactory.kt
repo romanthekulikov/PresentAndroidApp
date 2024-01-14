@@ -9,7 +9,7 @@ import com.example.present.domain.chatUseCases.GetMessagesUC
 import com.example.present.domain.chatUseCases.SendMessageUseCase
 import com.example.present.domain.chatUseCases.ShowGetMessagesErrorUseCase
 
-class ChatViewModelFactory(activity: Activity) : ViewModelProvider.Factory {
+class ChatViewModelFactory(activity: Activity, private val chatId: Int) : ViewModelProvider.Factory {
 
     private val sendToFirebaseUC by lazy(LazyThreadSafetyMode.NONE) {
         SendMessageUseCase()
@@ -39,7 +39,8 @@ class ChatViewModelFactory(activity: Activity) : ViewModelProvider.Factory {
             getMessagesUC,
             showGetMessagesErrorUC,
             deleteMessageUseCase,
-            editMessageUseCase
+            editMessageUseCase,
+            chatId
         ) as T
     }
 }

@@ -23,16 +23,19 @@ class ChatViewModel(
     private val getMessagesUC: GetMessagesUC,
     private val showGetMessagesErrorUC: ShowGetMessagesErrorUseCase,
     private val deleteMessageUC: DeleteMessageUseCase,
-    private val editMessageUseCase: EditMessageUseCase
+    private val editMessageUseCase: EditMessageUseCase,
+    chatId: Int
 ) : ViewModel() {
     private val firebaseDB = Firebase.database
-    private var chatReference = firebaseDB.getReference(CHAT_ROOMS_FIREBASE).child("1")
+    private var chatReference = firebaseDB.getReference(CHAT_ROOMS_FIREBASE).child(chatId.toString())
         .child(CHAT_MESSAGES)
     var messagesList: MutableLiveData<MutableList<Message>?> = MutableLiveData(mutableListOf())
-    var userId = 0
+    var userId = 1
     var replayId: String? = null
     var isTextEdit = false
     var editableMessageId: String? = null
+
+    var searching: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun getMessages() {
         chatReference.addValueEventListener(object : ValueEventListener {

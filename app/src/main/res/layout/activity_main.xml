@@ -9,6 +9,30 @@
     android:paddingTop="50dp"
     tools:context=".activities.gamePack.mainPack.MainActivity">
 
+    <LinearLayout
+        android:id="@+id/profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle"
+            android:elevation="15dp"
+            android:gravity="center"
+            tools:ignore="UselessParent">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/rules_description"
+                android:src="@drawable/ic_sign_in" />
+        </LinearLayout>
+    </LinearLayout>
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -155,7 +179,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/navigation_settings_layout"
+            android:id="@+id/navigation_presents_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -166,7 +190,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/settings"
+                android:id="@+id/presents"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:background="@drawable/main_circle_border_off"
@@ -181,7 +205,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginEnd="5dp"
                     android:contentDescription="@string/map_description"
-                    android:src="@drawable/settings" />
+                    android:src="@drawable/present_icon" />
 
                 <TextView
                     android:id="@+id/settings_text"

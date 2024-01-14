@@ -19,4 +19,13 @@ interface StageDao {
 
     @Query("SELECT * FROM stage_table ORDER BY id_stage LIMIT 1")
     fun getLastStage(): StageEntity
+
+    @Query("UPDATE stage_table SET is_done = true WHERE id_stage = :idStage")
+    fun doneStage(idStage: Int)
+
+    @Query("SELECT * FROM stage_table WHERE is_done = false ORDER BY id_stage LIMIT 1")
+    fun getCurrentStage(): StageEntity?
+
+    @Query("DELETE FROM stage_table")
+    fun deleteStageTable()
 }

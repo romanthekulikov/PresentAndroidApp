@@ -13,4 +13,10 @@ interface UserDao {
 
     @Query("SELECT * FROM user_table")
     fun getUser(): UserEntity?
+
+    @Query("UPDATE user_table SET icon = :icon, name = :name")
+    fun updateUserInfo(name: String, icon: String)
+
+    @Query("DELETE FROM user_table")
+    fun deleteUserTable()
 }

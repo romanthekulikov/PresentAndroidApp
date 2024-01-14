@@ -1,39 +1,90 @@
 package com.example.present.activities.gamePack.chatPack
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.present.adapters.ChatAdapter
+import com.example.present.data.database.AppDatabase
 import com.example.present.data.models.Message
 import com.example.present.databinding.ActivityChatBinding
 import com.example.present.dialog.ChatItemDialog
+import com.example.present.remote.ApiProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
     private lateinit var binding: ActivityChatBinding
     private lateinit var chatAdapter: ChatAdapter
+    private var textSize: Int = 12
+    private var chatId = -1
 
     private lateinit var vm: ChatViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         window.setSoftInputMode(SOFT_INPUT_ADJUST_PAN)
-        vm = ViewModelProvider(this, ChatViewModelFactory(this))[ChatViewModel::class.java]
+        chatId = intent.extras?.getInt("chatId")!!
+        val userId = intent.extras?.getInt("userId")!!
+        vm = ViewModelProvider(this, ChatViewModelFactory(this, chatId))[ChatViewModel::class.java]
+        vm.userId = userId
 
+        applyChatSettings()
         listenersInit()
         observersInit()
-        recyclerViewInit()
         vm.getMessages()
+    }
+
+    private fun applyChatSettings() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val gameDao = AppDatabase.getDB(this@ChatActivity).getGameDao()
+            val userDao = AppDatabase.getDB(this@ChatActivity).getUserDao()
+            val user = userDao.getUser()!!
+            val game = gameDao.getLastGame()!!
+            val userApi = ApiProvider.userApi
+            var appenderId = game.idAdmin
+            if (game.idAdmin == user.id) {
+                appenderId = game.idUser
+            }
+            val appender = userApi.getUser(appenderId).execute().body()
+            val chatDao = AppDatabase.getDB(this@ChatActivity).getChatDao()
+            val chat = chatDao.getChat()
+            CoroutineScope(Dispatchers.Main).launch {
+                if (chat.bgColor != "default") {
+                    try {
+                        binding.bg.setBackgroundColor(Color.parseColor(chat.bgColor))
+                    } catch (e: Exception) {
+                        Toast.makeText(this@ChatActivity, "Не удалось изменить фон", Toast.LENGTH_LONG).show()
+                    }
+                }
+                if (chat.bgImg != "default") {
+                    try {
+                        Glide.with(this@ChatActivity).load(chat.bgImg).into(binding.bgImage)
+                    } catch (e: Exception) {
+                        Toast.makeText(this@ChatActivity, "Не удалось изменить фон", Toast.LENGTH_LONG).show()
+                    }
+                }
+                Glide.with(this@ChatActivity).load(appender?.icon).circleCrop().into(binding.menIcon)
+                binding.appenderName.text = appender?.name
+                textSize = chat.textSize
+                recyclerViewInit()
+            }
+
+        }
     }
 
     private fun listenersInit() {
@@ -43,16 +94,42 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
             }
 
             menu.setOnClickListener {
+                if (!vm.searching.value!!) {
+                    chatAdapter.updateData(vm.messagesList.value!!)
+                    vm.searching.value = true
+                    binding.menIcon.visibility = View.GONE
+                    binding.appenderName.visibility = View.GONE
+                    binding.search.visibility = View.VISIBLE
+                } else {
+                    vm.searching.value = false
+                    doSearch()
+                    binding.menIcon.visibility = View.VISIBLE
+                    binding.appenderName.visibility = View.VISIBLE
+                    binding.search.visibility = View.GONE
+                }
 
             }
 
-            add.setOnClickListener {
-            }
+            binding.search.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                }
+
+                override fun afterTextChanged(p0: Editable?) {
+                    if (binding.search.text.toString().isEmpty()) {
+                        binding.menIcon.visibility = View.VISIBLE
+                        binding.appenderName.visibility = View.VISIBLE
+                        binding.search.visibility = View.GONE
+                    }
+                }
+
+            })
 
             send.setOnClickListener {
-                // TODO: При отправке сообщения, сначала оно отправляется на ВС, а потом, если оно
-                // успешно сохранено, отправляется в Firebase.(Нужно чтобы в Firebase сохранялась
-                // ссылка на картинку при ее наличии)
                 val text = message.text.toString()
                 if (text.isNotEmpty()) {
                     if (vm.isTextEdit) {
@@ -62,12 +139,26 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
                             if (message!!.text != text) {
                                 message.isEdit = true
                                 message.text = text
-                                vm.editMessage(message)
-                                vm.isTextEdit = false
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    val chatApi = ApiProvider.chatApi
+                                    chatApi.saveMessage(vm.userId, chatId, message.text!!, message.replayPosition!!).execute().body()
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        vm.editMessage(message)
+                                        vm.isTextEdit = false
+                                    }
+                                }
+
                             }
                         } catch (_: Exception) {}
                     } else {
-                        vm.sendMessageToFirebase(text)
+                        CoroutineScope(Dispatchers.IO).launch {
+                            val chatApi = ApiProvider.chatApi
+                            chatApi.saveMessage(vm.userId, chatId, text, null).execute().body()
+                            CoroutineScope(Dispatchers.Main).launch {
+                                vm.sendMessageToFirebase(text)
+                            }
+                        }
+
                     }
                 }
                 message.setText("")
@@ -79,8 +170,6 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                 override fun afterTextChanged(p0: Editable?) {
-                    if (message.text.isEmpty()) add.visibility = View.VISIBLE
-                    else add.visibility = View.GONE
                 }
 
             })
@@ -89,6 +178,18 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
                 replayLayout.visibility = View.GONE
             }
         }
+    }
+
+    private fun doSearch() {
+        val substring = binding.search.text.toString()
+        val list = vm.messagesList.value!!
+        val newList = mutableListOf<Message>()
+        for (item in list) {
+            if (substring in item.text!!.toLowerCase()!!) {
+                newList.add(item)
+            }
+        }
+        chatAdapter.updateData(newList)
     }
 
     private fun observersInit() {
@@ -108,7 +209,7 @@ class ChatActivity : AppCompatActivity(), ChatAdapter.ClickListener {
 
     private fun recyclerViewInit() {
         binding.progress.isActivated = true
-        chatAdapter = ChatAdapter(messagesList = mutableListOf(), userId = vm.userId, this)
+        chatAdapter = ChatAdapter(messagesList = mutableListOf(), userId = vm.userId, this, textSize)
         val layoutManager = LinearLayoutManager(this@ChatActivity)
         layoutManager.stackFromEnd = true
         binding.recyclerChat.layoutManager = layoutManager

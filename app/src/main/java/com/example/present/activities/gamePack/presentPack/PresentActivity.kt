@@ -10,6 +10,11 @@ import com.example.present.databinding.ActivityPresentBinding
 import com.example.present.domain.IntentKeys
 import com.example.present.activities.gamePack.getPresentPack.GetPresentActivity
 import com.example.present.adapters.PresentListAdapter
+import com.example.present.data.database.AppDatabase
+import com.example.present.data.models.PresentModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class PresentActivity : AppCompatActivity(), PresentListAdapter.PresentAdapterFunc {
     private lateinit var binding: ActivityPresentBinding
@@ -28,11 +33,20 @@ class PresentActivity : AppCompatActivity(), PresentListAdapter.PresentAdapterFu
     }
 
     private fun presentListInit() {
-        val presentList = presentVM.getPresentList()
-        val presentAdapter = PresentListAdapter(presentList, presentVM.progress.value!!, this)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        binding.presentList.layoutManager = layoutManager
-        binding.presentList.adapter = presentAdapter
+        CoroutineScope(Dispatchers.IO).launch {
+            val stageDao = AppDatabase.getDB(this@PresentActivity).getStageDao()
+            val stages = stageDao.getAllStage()
+            val listPresent = mutableListOf<PresentModel>()
+            for (stage in stages) {
+                listPresent.add(PresentModel(stage.idPresent, stage.isDone))
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                val presentAdapter = PresentListAdapter(listPresent, this@PresentActivity)
+                val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this@PresentActivity)
+                binding.presentList.layoutManager = layoutManager
+                binding.presentList.adapter = presentAdapter
+            }
+        }
     }
 
     private fun listenersInit() {

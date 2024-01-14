@@ -13,6 +13,9 @@ interface FormItemDao {
     @Query("SELECT * FROM form_item_table")
     fun getAllFormItems(): List<FormItemEntity>
 
+    @Query("DELETE FROM form_item_table WHERE id_stage = :idStage")
+    fun deletePresent(idStage: Int)
+
     @Query("DELETE FROM form_item_table")
     fun deleteData()
 }

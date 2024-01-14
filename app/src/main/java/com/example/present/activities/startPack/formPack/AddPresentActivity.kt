@@ -3,6 +3,7 @@ package com.example.present.activities.startPack.formPack
 import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
@@ -15,6 +16,8 @@ import com.example.present.data.models.PointFormModel
 import com.example.present.data.models.PresentFormModel
 import com.example.present.databinding.ActivityAddPresentBinding
 import com.example.present.dialog.DialogPresent
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,11 +31,12 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
     private var currentStage = POINT_STAGE
     private var pointForm: PointFormModel? = null
     private var presentForm: PresentFormModel? = null
+    private val fileStorage = Firebase.storage.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddPresentBinding.inflate(layoutInflater)
-
+        binding.progress.isActivated = true
         setContentView(binding.root)
         addBackPressed()
         listenersInit()
@@ -111,6 +115,7 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
         dialog.setPositiveButtonText(text = StringProvider.YES)
         dialog.setNegativeButtonText(text = StringProvider.CONTINUE)
         dialog.setPositiveAction {
+            binding.progress.visibility = View.VISIBLE
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     saveFormItem()
@@ -118,9 +123,6 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
                     getErrorDialog().show(supportFragmentManager, StringProvider.DIALOG_ERROR_TAG)
                 }
             }
-            val intent = Intent(this, FormActivity::class.java)
-            startActivity(intent)
-            finish()
         }
 
         return dialog
@@ -136,6 +138,35 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
     }
 
     private fun saveFormItem() {
+        if (presentForm!!.image != null) {
+            val dataRef = fileStorage.child("images/${presentForm!!.image!!.lastPathSegment}")
+            val uploadTask = dataRef.putFile(presentForm!!.image!!)
+            uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                dataRef.downloadUrl
+            }.addOnCompleteListener { task ->
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (task.isSuccessful) {
+                        val downloadUrl = task.result.toString()
+                        saveFormToDb(downloadUrl)
+                    } else {
+                        saveFormToDb("")
+                    }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val intent = Intent(this@AddPresentActivity, FormActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun saveFormToDb(imageLink: String) {
         val db = AppDatabase.getDB(context = this)
         val idUser = db.getUserDao().getUser()?.id
         val formItem = idUser?.let {
@@ -147,7 +178,7 @@ class AddPresentActivity : FragmentActivity(), PointFormFragment.PointOnNextClic
                 longitude = pointForm!!.point.longitude,
                 latitude = pointForm!!.point.latitude,
                 congratulation = presentForm!!.congratulationText,
-                presentImg = presentForm!!.image.toString(),
+                presentImg = imageLink,
                 key = presentForm!!.key,
                 keyOpen = presentForm!!.keyOpen,
                 link = presentForm!!.link

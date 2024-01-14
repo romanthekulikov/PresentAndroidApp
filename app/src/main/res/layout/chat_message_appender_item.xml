@@ -55,6 +55,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
+            android:alpha="0"
+            android:visibility="gone"
             android:src="@mipmap/ic_launcher_db"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/replay_layout"
@@ -68,7 +70,6 @@
             android:maxWidth="200dp"
             android:text="Тренировочное сообщение Тренировочное сообщение"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/men_icon"
             app:layout_constraintStart_toEndOf="@+id/men_icon"
             app:layout_constraintTop_toTopOf="@+id/men_icon" />
 

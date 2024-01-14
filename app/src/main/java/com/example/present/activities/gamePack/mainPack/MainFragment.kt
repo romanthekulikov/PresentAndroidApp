@@ -6,14 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.present.activities.gamePack.endPack.EndActivity
 import com.example.present.activities.gamePack.getPresentPack.GetPresentActivity
 import com.example.present.data.StringProvider
 import com.example.present.databinding.FragmentMainBinding
 import com.example.present.dialog.DialogPresent
 import com.example.present.domain.IntentKeys
+import com.example.present.remote.ApiProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
 
@@ -49,25 +55,32 @@ class MainFragment : Fragment() {
 
             check.setOnClickListener {
                 hideKeyboard()
-                if (mainVM.checkCode(inputCodeLayout.text.toString())) {
-                    getDialog().show(
-                        requireActivity().supportFragmentManager,
-                        StringProvider.DIALOG_CORRECT_TAG
-                    )
-                    mainVM.addProgress()
-                    inputCodeLayout.setText("")
-                } else {
-                    getErrorDialog().show(
-                        requireActivity().supportFragmentManager,
-                        StringProvider.DIALOG_ERROR_TAG
-                    )
+                CoroutineScope(Dispatchers.IO).launch {
+                    val gameApi = ApiProvider.gameApi
+                    val response =
+                        gameApi.checkStageKey(mainVM.mutableStageId.value!!, inputCodeLayout.text.toString()).execute().body()
+                    CoroutineScope(Dispatchers.Main).launch {
+                        try {
+                            if (response!!.error == 200) {
+                                getDialog().show(
+                                    requireActivity().supportFragmentManager,
+                                    StringProvider.DIALOG_CORRECT_TAG
+                                )
+                                mainVM.addProgress()
+                                inputCodeLayout.setText("")
+                            } else {
+                                getErrorDialog().show(
+                                    requireActivity().supportFragmentManager,
+                                    StringProvider.DIALOG_ERROR_TAG
+                                )
+                            }
+                        } catch (e: Exception) {
+                            Toast.makeText(requireContext(), "Что-то пошло не так(", Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
-            }
 
-//            openAllPresent.setOnClickListener {
-//                val intent = Intent(this@MainActivity, PresentActivity::class.java)
-//                startActivity(intent)
-//            }
+            }
         }
     }
 
@@ -75,25 +88,30 @@ class MainFragment : Fragment() {
         mainVM.getData()
         _binding.apply {
             hintText.text = mainVM.mutableHint.value
+            _binding.inputCodeLayout.setText(mainVM.taskArg)
         }
     }
 
     private fun observationInit() {
         mainVM.mutableHint.observe(requireActivity()) {
             _binding.hintText.text = it
+            if (it == "") {
+                val intent = Intent(requireContext(), EndActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
     private fun getDialog(): DialogPresent {
-        val progress = mainVM.mutableProgress.value
+        val idPresent = mainVM.mutablePresentId.value
         val dialog = DialogPresent()
-        val message = StringProvider.dialogCongratulationTitleMap[progress]!!
+        val message = StringProvider.congratulationDialogText
         dialog.setMessage(text = message)
         dialog.setNegativeButtonText(text = StringProvider.NEGATIVE_DIALOG_BUTTON)
         dialog.setPositiveButtonText(text = StringProvider.POSITIVE_DIALOG_BUTTON)
         dialog.setPositiveAction {
             val intent = Intent(requireContext(), GetPresentActivity::class.java)
-            intent.putExtra(IntentKeys.PROGRESS_KEY, progress)
+            intent.putExtra(IntentKeys.PROGRESS_KEY, idPresent)
             startActivity(intent)
         }
 
@@ -101,9 +119,8 @@ class MainFragment : Fragment() {
     }
 
     private fun getAdditionalDialog(): DialogPresent {
-        val progress = mainVM.mutableProgress.value
         val dialog = DialogPresent()
-        val message = StringProvider.additionalHintMap[progress]!!
+        val message = mainVM.mutableAdditionalHint.value!!
         dialog.setMessage(text = message)
         dialog.setPositiveButtonText(text = StringProvider.POSITIVE_ADDITIONAL_BUTTON)
 

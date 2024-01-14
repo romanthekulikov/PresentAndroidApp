@@ -1,15 +1,18 @@
 package com.example.present.adapters
 
+import android.content.Context
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.present.data.models.Message
 import com.example.present.databinding.ChatMessageAppenderItemBinding
 import com.example.present.databinding.ChatMessageUserItemBinding
+import com.example.present.remote.ApiProvider
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -20,7 +23,8 @@ const val APPENDER_TYPE = 1
 class ChatAdapter(
     private var messagesList: List<Message>,
     private val userId: Int,
-    private val listener: ClickListener
+    private val listener: ClickListener,
+    private val textSize: Int
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var bindingUserMessage: ChatMessageUserItemBinding
@@ -28,7 +32,8 @@ class ChatAdapter(
 
     class UserMessageViewHolder(
         private val binding: ChatMessageUserItemBinding,
-        private val listener: ClickListener
+        private val listener: ClickListener,
+        private val textSize: Int
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Message) {
             val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
@@ -39,6 +44,7 @@ class ChatAdapter(
             binding.mainLayout.layoutParams = params
             binding.apply {
                 text.text = item.text
+                text.textSize = textSize.toFloat()
                 val formatter = SimpleDateFormat("HH:mm", Locale("ru"))
                 val timeSend = formatter.format(item.time)
                 time.text = timeSend
@@ -71,7 +77,8 @@ class ChatAdapter(
 
     class AppenderMessageViewHolder(
         private val binding: ChatMessageAppenderItemBinding,
-        private val listener: ClickListener
+        private val listener: ClickListener,
+        private val textSize: Int
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Message) {
             binding.apply {
@@ -79,6 +86,7 @@ class ChatAdapter(
                 val formatter = SimpleDateFormat("HH:mm", Locale("ru"))
                 val timeSend = formatter.format(item.time)
                 time.text = timeSend
+                text.textSize = textSize.toFloat()
                 if (!item.replayId.isNullOrEmpty()) {
                     replayLayout.visibility = View.VISIBLE
                     replayText.text = item.replayText
@@ -105,12 +113,14 @@ class ChatAdapter(
         return when (viewType) {
             USER_TYPE -> UserMessageViewHolder(
                 binding = bindingUserMessage,
-                listener = listener
+                listener = listener,
+                textSize = textSize
             )
 
             else -> AppenderMessageViewHolder(
                 binding = bindingAppenderMessage,
-                listener = listener
+                listener = listener,
+                textSize
             )
         }
     }
@@ -148,5 +158,22 @@ class ChatAdapter(
     interface ClickListener {
         fun clickOnReplayMessage(position: Int)
         fun longClickListener(message: Message, touchX: Int, touchY: Int)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+class yyy {
+    fun jjj() {
+        ApiProvider.chatApi.updateMessage("", -1)
+        ApiProvider.chatApi.deleteMessage(-1)
+        ApiProvider.chatApi.getMessageBySubstring(", ", -1)
     }
 }

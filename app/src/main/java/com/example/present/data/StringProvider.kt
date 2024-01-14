@@ -50,6 +50,8 @@ object StringProvider {
         2 to "Ты дошла до последнего подарка в этом приложении\nОткроешь сейчас или потом?"
     )
 
+    val congratulationDialogText = "Да, пароль верный! Отрыть подарок сейчас или потом?"
+
     val hintMap = mapOf(
         0 to "Первая подсказка",
         1 to "Вторая подсказка",
@@ -91,6 +93,7 @@ object StringProvider {
     const val ERROR_HINT_POINT = "Необходимо заполнить подсказку"
     const val ERROR_CONGRATULATION_PRESENT = "Необходимо заполнить поздравление"
     const val ERROR_LINK_PRESENT = "Необходимо заполнить ссылку на активацию"
+    const val ERROR_INVALID_LINK_PRESENT = "URL введен неверно"
     const val ERROR_KEY_PRESENT = "Необходимо заполнить ключ для активации подарка"
     const val ERROR_SEND_MESSAGE = "Не удалось отправить"
     const val ERROR_LARGE_FILE = "Выбран слишком большой файл"

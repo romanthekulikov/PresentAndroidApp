@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/sign_in"
+            android:id="@+id/icon"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:gravity="center"
@@ -52,7 +52,7 @@
             android:textColorHint="@color/gray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sign_in" />
+            app:layout_constraintTop_toBottomOf="@+id/icon" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password"
@@ -90,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
@@ -174,7 +175,8 @@
         android:divider="@drawable/divider_auth"
         android:gravity="center"
         android:showDividers="middle"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/sign_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -194,10 +196,22 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/enter_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/our_autch"
             android:textColor="@color/black"
             android:textSize="16dp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/sign_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Или пройти регистрацию"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

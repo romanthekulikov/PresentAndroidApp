@@ -13,4 +13,10 @@ interface GameDao {
 
     @Query("SELECT * FROM game_table WHERE id_game = :id")
     fun getGameById(id: Int): GameEntity
+
+    @Query("SELECT * FROM game_table")
+    fun getLastGame(): GameEntity?
+
+    @Query("DELETE FROM game_table")
+    fun deleteGameTable()
 }
